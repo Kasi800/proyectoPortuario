@@ -1,0 +1,53 @@
+### GET /api/puertos recupera todos los puertos
+GET http://localhost:3000/api/puertos
+
+### GET /api/puertos? recupera todos los puertos que coincidan con el filtro
+GET http://localhost:3000/api/puertos?ciudad=Valencia
+
+### GET /api/puertos/:id recupera un puerto
+GET http://localhost:3000/api/puertos/1
+
+### GET /api/puertos/:id recupera un puerto - NOT FOUND(404)
+GET http://localhost:3000/api/puertos/50
+
+### POST /api/puertos crea un nuevo puerto
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Sevilla",
+  "ciudad": "Sevilla",
+  "pais": "España",
+  "capacidad_teu": 1200000,
+  "activo": true,
+  "fecha_inauguracion": "1920-04-15",
+  "profundidad_media": 9.5
+}
+
+### PUT /api/puertos/:id modifica un puerto completamente
+PUT http://localhost:3000/api/puertos/4
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Sevilla Renovado",
+  "ciudad": "Sevilla",
+  "pais": "España",
+  "capacidad_teu": 5200000,
+  "activo": true,
+  "fecha_inauguracion": "1925-04-15",
+  "profundidad_media": 17.5
+}
+
+### PATCH /api/puertos/:id modifica un puerto parcialmente
+PATCH http://localhost:3000/api/puertos/4
+Content-Type: application/json
+
+{
+  "activo": false
+}
+
+### GET /api/puertos/:id recupera un puerto
+GET http://localhost:3000/api/puertos/4
+
+### DELETE /api/puertos/:id elimina un puerto
+DELETE http://localhost:3000/api/puertos/4

@@ -1,0 +1,8 @@
+// Pequeño wrapper para manejar funciones async en rutas/controladores
+module.exports = fn => (req, res, next) => {
+  try {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  } catch (err) {
+    next(err);
+  }
+};

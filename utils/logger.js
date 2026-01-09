@@ -1,19 +1,35 @@
-function logMensaje() {
-  console.log(new Date());
-
-  for (let parametro of arguments){
-    console.log(parametro);
-  }
-  
-  console.log("----------------------------------");
+let logger = null;
+try {
+  const winston = require('winston');
+  logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.errors({ stack: true }),
+      winston.format.json()
+    ),
+    transports: [new winston.transports.Console()]
+  });
+} catch (e) {
+  // Winston no disponible — usar fallback console
+  logger = {
+    info: (...args) => console.log(new Date().toISOString(), ...args),
+    error: (...args) => console.error(new Date().toISOString(), ...args),
+    debug: (...args) => console.debug(new Date().toISOString(), ...args)
+  };
 }
 
-function logErrorSQL(err){
-  console.error('Error de MySQL:');
-  console.error('Code:', err.code);
-  console.error('Errno:', err.errno);
-  console.error('SQL Message:', err.sqlMessage);
-  console.error('SQL State:', err.sqlState);
+function logMensaje(...args) {
+  logger.info(...args);
 }
 
-module.exports = { logMensaje, logErrorSQL };
+function logErrorSQL(err) {
+  logger.error('Error de MySQL:', {
+    code: err && err.code,
+    errno: err && err.errno,
+    sqlMessage: err && err.sqlMessage,
+    sqlState: err && err.sqlState
+  });
+}
+
+module.exports = { logMensaje, logErrorSQL, logger };

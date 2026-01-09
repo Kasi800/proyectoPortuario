@@ -1,5 +1,5 @@
-// services/puertoService.js
-// Servicio para interactuar con el modelo Sequelize `puerto`
+// services/muelleService.js
+// Servicio para interactuar con el modelo Sequelize `muelle`
 
 // Recuperar función de inicialización de modelos
 const initModels = require("../models/init-models.js").initModels;
@@ -9,8 +9,8 @@ const { logMensaje } = require("../utils/logger.js");
 const ApiError = require("../utils/ApiError");
 // Cargar las definiciones del modelo en sequelize
 const models = initModels(sequelize);
-// Recuperar el modelo puerto
-const Puerto = models.puerto;
+// Recuperar el modelo muelle
+const Muelle = models.muelle;
 
 function parseValue(value) {
     if (value === "true") return true;
@@ -21,21 +21,20 @@ function parseValue(value) {
 
 function getAllowedFields() {
     try {
-        return Object.keys(Puerto && Puerto.rawAttributes ? Puerto.rawAttributes : {});
+        return Object.keys(Muelle && Muelle.rawAttributes ? Muelle.rawAttributes : {});
     } catch (e) {
         return [];
     }
 }
 
-class PuertoService {
+class MuelleService {
 
-    async getPuertos(queryParams) {
-        // Devuelve todos los Puertos que coincidan con el filtro.
+    async getMuelles(queryParams) {
+        // Devuelve todos los Muelles que coincidan con el filtro.
         try {
             const where = {};
             const allowed = getAllowedFields();
 
-            // Soportar paginación básica
             let limit = 100;
             let offset = 0;
             if (queryParams.limit) {
@@ -53,69 +52,69 @@ class PuertoService {
                 where[key] = parseValue(queryParams[key]);
             }
 
-            const result = await Puerto.findAll({ where, limit, offset });
+            const result = await Muelle.findAll({ where, limit, offset });
             return result;
         } catch (err) {
-            logMensaje('Error getPuertos:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener puertos', 500);
+            logMensaje('Error getMuelles:', err && err.message ? err.message : err);
+            throw new ApiError('Error al obtener muelles', 500);
         }
     }
 
-    async getPuertoById(id_puerto) {
-        // Devuelve un Puerto por su id
+    async getMuelleById(id_muelle) {
+        // Devuelve un Muelle por su id
         try {
-            const id = Number(id_puerto);
+            const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
-            const result = await Puerto.findByPk(id);
-            if (!result) throw new ApiError('Puerto no encontrado', 404);
+            const result = await Muelle.findByPk(id);
+            if (!result) throw new ApiError('Muelle no encontrado', 404);
             return result;
         } catch (err) {
             if (err.status) throw err;
-            logMensaje('Error getPuertoById:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener puerto', 500);
+            logMensaje('Error getMuelleById:', err && err.message ? err.message : err);
+            throw new ApiError('Error al obtener muelle', 500);
         }
     }
 
-    async createPuerto(puerto) {
-        //Crea un Puerto
+    async createMuelle(muelle) {
+        //Crea un Muelle
         try {
-            const result = await Puerto.create(puerto);
+            const result = await Muelle.create(muelle);
             return result;
         } catch (err) {
-            logMensaje('Error createPuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al crear puerto', 500);
+            logMensaje('Error createMuelle:', err && err.message ? err.message : err);
+            throw new ApiError('Error al crear muelle', 500);
         }
     }
 
-    async updatePuerto(id_puerto, data) {
-        // Actualiza un puerto
+    async updateMuelle(id_muelle, data) {
+        // Actualiza un Muelle
         try {
-            const id = Number(id_puerto);
+            const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
-            const [numFilas] = await Puerto.update(data, { where: { id_puerto: id } });
-            if (numFilas === 0) throw new ApiError('Puerto no encontrado o sin cambios', 404);
+            const [numFilas] = await Muelle.update(data, { where: { id_muelle: id } });
+            if (numFilas === 0) throw new ApiError('Muelle no encontrado o sin cambios', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
         } catch (err) {
             if (err.status) throw err;
-            logMensaje('Error updatePuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al actualizar puerto', 500);
+            logMensaje('Error updateMuelle:', err && err.message ? err.message : err);
+            throw new ApiError('Error al actualizar muelle', 500);
         }
     }
 
-    async deletePuerto(id_puerto) {
-        //Borrar un Puerto
+    async deleteMuelle(id_muelle) {
+        //Borrar un Muelle
         try {
-            const id = Number(id_puerto);
+            const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
-            const numFilas = await Puerto.destroy({ where: { id_puerto: id } });
-            if (numFilas === 0) throw new ApiError('Puerto no encontrado', 404);
+            const numFilas = await Muelle.destroy({ where: { id_muelle: id } });
+            if (numFilas === 0) throw new ApiError('Muelle no encontrado', 404);
             return numFilas;
         } catch (err) {
             if (err.status) throw err;
-            logMensaje('Error deletePuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al borrar puerto', 500);
+            logMensaje('Error deleteMuelle:', err && err.message ? err.message : err);
+            throw new ApiError('Error al borrar muelle', 500);
         }
     }
 }
 
-module.exports = new PuertoService();
+module.exports = new MuelleService();

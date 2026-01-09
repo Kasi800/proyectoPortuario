@@ -1,0 +1,72 @@
+###############################################
+# GET — Obtener todos los muelles
+###############################################
+GET http://localhost:3000/api/muelles
+
+###
+
+# GET — Obtener muelles filtrados (ejemplos)
+GET http://localhost:3000/api/muelles?operativo=true
+
+###
+GET http://localhost:3000/api/muelles?tipo=carga
+
+###
+GET http://localhost:3000/api/muelles?id_puerto=1&operativo=true
+
+
+###############################################
+# GET — Obtener un muelle por ID
+###############################################
+GET http://localhost:3000/api/muelles/1
+
+
+###############################################
+# POST — Crear un nuevo muelle
+###############################################
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Experimental",
+  "longitud_m": 850.5,
+  "calado_m": 11.2,
+  "operativo": true,
+  "fecha_construccion": "2020-06-10",
+  "tipo": "mixto"
+}
+
+
+###############################################
+# PUT — Modificar un muelle COMPLETO
+###############################################
+PUT http://localhost:3000/api/muelles/8
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Norte Renovado",
+  "longitud_m": 1200.0,
+  "calado_m": 14.5,
+  "operativo": false,
+  "fecha_construccion": "1988-02-14",
+  "tipo": "carga"
+}
+
+
+###############################################
+# PATCH — Modificar un muelle PARCIALMENTE
+###############################################
+PATCH http://localhost:3000/api/muelles/8
+Content-Type: application/json
+
+{
+  "operativo": true
+}
+
+
+###############################################
+# DELETE — Eliminar un muelle
+###############################################
+DELETE http://localhost:3000/api/muelles/8

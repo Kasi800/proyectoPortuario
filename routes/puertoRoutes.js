@@ -2,12 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const puertoController = require('../controllers/puertoController');
+const asyncHandler = require('../utils/asyncHandler');
+const validateId = require('../utils/validateId');
 
-router.get('/', puertoController.getPuertos);
-router.get('/:id', puertoController.getPuertoById);
-router.post('/', puertoController.createPuerto);
-router.put('/:id', puertoController.updatePuerto);
-router.patch('/:id', puertoController.updatePuerto);
-router.delete('/:id', puertoController.deletePuerto);
+router.get('/', asyncHandler(puertoController.getPuertos.bind(puertoController)));
+router.get('/:id', validateId('id'), asyncHandler(puertoController.getPuertoById.bind(puertoController)));
+router.post('/', asyncHandler(puertoController.createPuerto.bind(puertoController)));
+router.put('/:id', validateId('id'), asyncHandler(puertoController.updatePuerto.bind(puertoController)));
+router.patch('/:id', validateId('id'), asyncHandler(puertoController.updatePuerto.bind(puertoController)));
+router.delete('/:id', validateId('id'), asyncHandler(puertoController.deletePuerto.bind(puertoController)));
 
 module.exports = router;

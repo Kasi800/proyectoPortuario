@@ -42,53 +42,42 @@ index.js
 
 npm install
 
-### Configura tu base de datos en:
-
-.env.development
-
-#### Ejemplo:
-
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=1234
-DB_NAME=puertos
-DB_PORT=3306
+### Configura la app en: **.env** (ejemplo .env.example)
 
 ## 📡 Endpoints principales
 
 ### Puertos
 
-GET /api/puertos
-GET /api/puertos/:id
-POST /api/puertos
-PATCH /api/puertos/:id
-PUT /api/puertos/:id
-DELETE /api/puertos/:id
+- GET /api/puertos
+- GET /api/puertos/:id
+- POST /api/puertos
+- PATCH /api/puertos/:id
+- PUT /api/puertos/:id
+- DELETE /api/puertos/:id
 
 ### Muelles
 
-GET /api/muelles
-GET /api/muelles/:id
-POST /api/muelles
-PATCH /api/muelles/:id
-PUT /api/muelles/:id
-DELETE /api/muelles/:id
+- GET /api/muelles
+- GET /api/muelles/:id
+- POST /api/muelles
+- PATCH /api/muelles/:id
+- PUT /api/muelles/:id
+- DELETE /api/muelles/:id
 
 ## 🔍 Filtros, ordenación y paginación
 
 ### Ejemplos:
 
-Código
-GET /api/puertos?ciudad=Sevilla&activo=true
-GET /api/puertos?order=nombre:asc
-GET /api/muelles?tipo=carga&limit=5&offset=10
+- GET /api/puertos?ciudad=Sevilla&activo=true
+- GET /api/puertos?order=nombre:asc
+- GET /api/muelles?tipo=carga&limit=5&offset=10
 
 ## 🧱 Validación
 
-**Body:** Joi (full + partial)
+- **Body:** Joi (full + partial)
 
-**Query params:** validación dinámica según el modelo
+- **Query params:** validación dinámica según el modelo
 
-**Order:** validación estricta
+- **Order:** validación estricta
 
-**Relaciones:** comprobación de id_puerto existente
+- **Relaciones:** comprobación de id_puerto existente

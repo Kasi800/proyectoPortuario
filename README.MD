@@ -16,20 +16,6 @@ Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MyS
 
 ---
 
-## 📁 Estructura del proyecto
-
-config/
-controllers/
-middleware/
-models/
-routes/
-services/
-utils/
-validators/
-tests/
-sql/
-index.js
-
 ## 🛠 Requisitos
 
 - Node.js 18+
@@ -40,9 +26,8 @@ index.js
 
 ## ⚙️ Instalación
 
-npm install
-
-### Configura la app en: **.env** (ejemplo .env.example)
+Para instalar las depedencias: **npm install**
+Configura las variables de entorno en **.env** (ejemplo .env.example)
 
 ## 📡 Endpoints principales
 
@@ -79,5 +64,3 @@ npm install
 - **Query params:** validación dinámica según el modelo
 
 - **Order:** validación estricta
-
-- **Relaciones:** comprobación de id_puerto existente

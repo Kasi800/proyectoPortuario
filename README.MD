@@ -12,7 +12,6 @@ Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MyS
 - Manejo de errores centralizado
 - Logs estructurados
 - Arquitectura limpia (controllers, services, validators, middleware)
-- Tests automáticos con **Jest + Supertest**
 
 ---
 

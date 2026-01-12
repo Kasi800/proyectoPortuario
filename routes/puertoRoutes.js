@@ -6,7 +6,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const validateId = require('../middleware/validateId');
 
 const validateBody = require('../middleware/validateBody');
-const { puertoSchemaFull, puertoSchemaPartial } = require('../validators/puertoValidator');
+const { puertoSchemaFull, puertoSchemaPartial } = require('../validators/puertoBodyValidator');
 const validateQuery = require('../middleware/validateQuery');
 const puertoQueryValidator = require('../validators/puertoQueryValidator');
 

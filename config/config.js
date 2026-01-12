@@ -20,4 +20,3 @@ logMensaje("DBNAME:", process.env.DB_NAME);
 logMensaje("DBHOST:", process.env.DB_HOST);
 logMensaje("DBUSER:", process.env.DB_USER);
 logMensaje("DBPORT:", process.env.DB_PORT);
-logMensaje("API PORT:", process.env.PORT);

@@ -6,7 +6,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const validateId = require('../middleware/validateId');
 
 const validateBody = require('../middleware/validateBody');
-const { muelleSchemaFull, muelleSchemaPartial } = require('../validators/muelleValidator');
+const { muelleSchemaFull, muelleSchemaPartial } = require('../validators/muelleBodyValidator');
 const validateQuery = require('../middleware/validateQuery');
 const muelleQueryValidator = require('../validators/muelleQueryValidator');
 

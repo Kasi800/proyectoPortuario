@@ -12,20 +12,7 @@ const models = initModels(sequelize);
 // Recuperar el modelo muelle
 const Muelle = models.muelle;
 
-function parseValue(value) {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (/^-?\d+(?:\.\d+)?$/.test(value)) return Number(value);
-    return value;
-}
-
-function getAllowedFields() {
-    try {
-        return Object.keys(Muelle && Muelle.rawAttributes ? Muelle.rawAttributes : {});
-    } catch (e) {
-        return [];
-    }
-}
+const { parseValue, getAllowedFields } = require("../utils/queryUtils.js");
 
 class MuelleService {
 
@@ -33,7 +20,7 @@ class MuelleService {
         // Devuelve todos los Muelles que coincidan con el filtro.
         try {
             const where = {};
-            const allowed = getAllowedFields();
+            const allowed = getAllowedFields(Muelle);
 
             let limit = 100;
             let offset = 0;
@@ -46,13 +33,22 @@ class MuelleService {
                 if (!Number.isNaN(o) && o >= 0) offset = o;
             }
 
+            let order = [];
+            if (queryParams.order) {
+                const [campo, direccion] = queryParams.order.split(":");
+
+                if (allowed.includes(campo)) {
+                    order.push([campo, direccion?.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+                }
+            }
+
             for (const key in queryParams) {
-                if (key === 'limit' || key === 'offset') continue;
+                if (["limit", "offset", "order"].includes(key)) continue;
                 if (allowed.length && allowed.indexOf(key) === -1) continue;
                 where[key] = parseValue(queryParams[key]);
             }
 
-            const result = await Muelle.findAll({ where, limit, offset });
+            const result = await Muelle.findAll({ where, limit, offset, order });
             return result;
         } catch (err) {
             logMensaje('Error getMuelles:', err && err.message ? err.message : err);

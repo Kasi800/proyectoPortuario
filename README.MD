@@ -26,7 +26,7 @@ Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MyS
 
 ## ⚙️ Instalación
 
-Para instalar las depedencias: **npm install**
+Para instalar las depedencias: **npm install**\n
 Configura las variables de entorno en **.env** (ejemplo .env.example)
 
 ## 📡 Endpoints principales

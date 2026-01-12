@@ -4,6 +4,9 @@ GET http://localhost:3000/api/puertos
 ### GET /api/puertos? recupera todos los puertos que coincidan con el filtro
 GET http://localhost:3000/api/puertos?ciudad=Valencia
 
+### GET /api/puertos? recupera todos los puertos con el limite y offset
+GET http://localhost:3000/api/puertos?limit=2&offset=1
+
 ### GET /api/puertos/:id recupera un puerto
 GET http://localhost:3000/api/puertos/1
 

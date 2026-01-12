@@ -12,20 +12,7 @@ const models = initModels(sequelize);
 // Recuperar el modelo puerto
 const Puerto = models.puerto;
 
-function parseValue(value) {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    if (/^-?\d+(?:\.\d+)?$/.test(value)) return Number(value);
-    return value;
-}
-
-function getAllowedFields() {
-    try {
-        return Object.keys(Puerto && Puerto.rawAttributes ? Puerto.rawAttributes : {});
-    } catch (e) {
-        return [];
-    }
-}
+const { parseValue, getAllowedFields } = require("../utils/queryUtils.js");
 
 class PuertoService {
 

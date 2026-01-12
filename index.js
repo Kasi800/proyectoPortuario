@@ -57,15 +57,6 @@ app.use("/api/puertos", puertoRoutes);
 app.use("/api/muelles", muelleRoutes);
 
 // ============================================
-// RUTAS - SPA (Catch-all)
-// ============================================
-
-// Cualquier ruta no manejada por los routers anteriores servirá el archivo
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// ============================================
 // SERVIDOR
 // ============================================
 

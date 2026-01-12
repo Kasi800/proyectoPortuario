@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const puertoController = require('../controllers/puertoController');
 const asyncHandler = require('../utils/asyncHandler');
-const validateId = require('../utils/validateId');
+const validateId = require('../middleware/validateId');
 
 router.get('/', asyncHandler(puertoController.getPuertos.bind(puertoController)));
 router.get('/:id', validateId('id'), asyncHandler(puertoController.getPuertoById.bind(puertoController)));

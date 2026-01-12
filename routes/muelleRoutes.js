@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const muelleController = require('../controllers/muelleController');
 const asyncHandler = require('../utils/asyncHandler');
-const validateId = require('../utils/validateId');
+const validateId = require('../middleware/validateId');
 
 router.get('/', asyncHandler(muelleController.getMuelle.bind(muelleController)));
 router.get('/:id', validateId('id'), asyncHandler(muelleController.getMuelleById.bind(muelleController)));

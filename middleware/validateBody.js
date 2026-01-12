@@ -7,8 +7,8 @@ module.exports = (schema) => (req, res, next) => {
     if (error) {
         return res.status(400).json({
             ok: false,
-            datos: null,
-            mensaje: "Datos inválidos"
+            data: null,
+            message: "Invalid request data"
         });
     }
 

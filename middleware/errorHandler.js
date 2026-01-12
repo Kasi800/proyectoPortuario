@@ -6,7 +6,7 @@ module.exports = (err, req, res, next) => {
   try {
     logMensaje('Error HTTP:', status, message, err && err.stack ? err.stack : null);
   } catch (e) {
-    console.error('Error al loguear:', e);
+    console.error('Log error:', e);
   }
-  res.status(status).json({ ok: false, datos: null, mensaje: message });
+  res.status(status).json({ ok: false, data: null, message: message });
 };

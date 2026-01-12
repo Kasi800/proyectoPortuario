@@ -52,7 +52,7 @@ class MuelleService {
             return result;
         } catch (err) {
             logMensaje('Error getMuelles:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener muelles', 500);
+            throw new ApiError('Error getMuelles', 500);
         }
     }
 
@@ -60,14 +60,14 @@ class MuelleService {
         // Devuelve un Muelle por su id
         try {
             const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const result = await Muelle.findByPk(id);
-            if (!result) throw new ApiError('Muelle no encontrado', 404);
+            if (!result) throw new ApiError('Muelle not found', 404);
             return result;
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error getMuelleById:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener muelle', 500);
+            throw new ApiError('Error getMuelleById', 500);
         }
     }
 
@@ -78,7 +78,7 @@ class MuelleService {
             return result;
         } catch (err) {
             logMensaje('Error createMuelle:', err && err.message ? err.message : err);
-            throw new ApiError('Error al crear muelle', 500);
+            throw new ApiError('Error createMuelle', 500);
         }
     }
 
@@ -86,14 +86,14 @@ class MuelleService {
         // Actualiza un Muelle
         try {
             const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const [numFilas] = await Muelle.update(data, { where: { id_muelle: id } });
-            if (numFilas === 0) throw new ApiError('Muelle no encontrado o sin cambios', 404);
+            if (numFilas === 0) throw new ApiError('Muelle not found or without changes', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error updateMuelle:', err && err.message ? err.message : err);
-            throw new ApiError('Error al actualizar muelle', 500);
+            throw new ApiError('Error updateMuelle', 500);
         }
     }
 
@@ -101,14 +101,14 @@ class MuelleService {
         //Borrar un Muelle
         try {
             const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const numFilas = await Muelle.destroy({ where: { id_muelle: id } });
-            if (numFilas === 0) throw new ApiError('Muelle no encontrado', 404);
+            if (numFilas === 0) throw new ApiError('Muelle not found', 404);
             return numFilas;
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error deleteMuelle:', err && err.message ? err.message : err);
-            throw new ApiError('Error al borrar muelle', 500);
+            throw new ApiError('Error deleteMuelle', 500);
         }
     }
 }

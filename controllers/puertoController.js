@@ -6,34 +6,32 @@ class PuertoController {
 
     async getPuertos(req, res) {
         const puertos = await puertoService.getPuertos(req.query);
-        return res.status(200).json({ ok: true, datos: puertos, mensaje: "Puertos recuperados correctamente" });
+        return res.status(200).json({ ok: true, data: puertos, message: "Ports successfully recovered" });
     }
 
     async createPuerto(req, res) {
         const puerto = req.body;
         const puertoNew = await puertoService.createPuerto(puerto);
-        return res.status(201).json({ ok: true, datos: puertoNew, mensaje: "Puerto creado correctamente" });
+        return res.status(201).json({ ok: true, data: puertoNew, message: "Port created correctly" });
     }
 
     async deletePuerto(req, res) {
         const id_puerto = req.params.id;
         const numFilas = await puertoService.deletePuerto(id_puerto);
-        if (numFilas == 0) return res.status(404).json({ ok: false, datos: null, mensaje: "Puerto no encontrado: " + id_puerto });
-        return res.status(204).send();
+        return res.status(204).json({ ok: true, data: numFilas, message: "Port deleted correctly" });
     }
 
     async getPuertoById(req, res) {
         const id_puerto = req.params.id;
         const puerto = await puertoService.getPuertoById(id_puerto);
-        return res.status(200).json({ ok: true, datos: puerto, mensaje: "Puerto recuperado correctamente" });
+        return res.status(200).json({ ok: true, data: puerto, message: "Port recovered correctly" });
     }
 
     async updatePuerto(req, res) {
         const id = req.params.id;
         const data = req.body;
         const filas = await puertoService.updatePuerto(id, data);
-        if (filas === 0) return res.status(404).json({ message: "Puerto no encontrado" });
-        return res.json({ message: "Puerto actualizado correctamente" });
+        return res.json({ ok: true, data: filas, message: "Port updated correctly" });
     }
 }
 

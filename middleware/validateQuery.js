@@ -4,8 +4,8 @@ module.exports = (schema) => (req, res, next) => {
     if (error) {
         return res.status(400).json({
             ok: false,
-            datos: null,
-            mensaje: "Query inválida"
+            data: null,
+            message: "Invalid query"
         });
     }
 

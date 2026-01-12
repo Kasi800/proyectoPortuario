@@ -14,8 +14,7 @@ const muelleSchemaFull = Joi.object({
 // Validación parcial (PATCH)
 const muelleSchemaPartial = muelleSchemaFull.fork(
     Object.keys(muelleSchemaFull.describe().keys),
-    (schema) => schema.optional()
-);
+    (schema) => schema.optional()).min(1);
 
 module.exports = {
     muelleSchemaFull,

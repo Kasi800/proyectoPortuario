@@ -4,7 +4,7 @@ module.exports = function validateIdParam(paramName = 'id') {
         const val = req.params[paramName];
         const num = Number(val);
         if (!Number.isFinite(num) || String(num) !== String(val)) {
-            return res.status(400).json({ ok: false, datos: null, mensaje: 'Identificador inválido' });
+            return res.status(400).json({ ok: false, data: null, message: 'Invalid identifier' });
         }
         next();
     };

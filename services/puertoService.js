@@ -53,7 +53,7 @@ class PuertoService {
             return result;
         } catch (err) {
             logMensaje('Error getPuertos:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener puertos', 500);
+            throw new ApiError('Error getPuertos', 500);
         }
     }
 
@@ -61,14 +61,14 @@ class PuertoService {
         // Devuelve un Puerto por su id
         try {
             const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const result = await Puerto.findByPk(id);
-            if (!result) throw new ApiError('Puerto no encontrado', 404);
+            if (!result) throw new ApiError('Puerto not found', 404);
             return result;
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error getPuertoById:', err && err.message ? err.message : err);
-            throw new ApiError('Error al obtener puerto', 500);
+            throw new ApiError('Error getPuertoById', 500);
         }
     }
 
@@ -79,7 +79,7 @@ class PuertoService {
             return result;
         } catch (err) {
             logMensaje('Error createPuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al crear puerto', 500);
+            throw new ApiError('Error createPuerto', 500);
         }
     }
 
@@ -87,14 +87,14 @@ class PuertoService {
         // Actualiza un puerto
         try {
             const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const [numFilas] = await Puerto.update(data, { where: { id_puerto: id } });
-            if (numFilas === 0) throw new ApiError('Puerto no encontrado o sin cambios', 404);
+            if (numFilas === 0) throw new ApiError('Puerto not found or without changes', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error updatePuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al actualizar puerto', 500);
+            throw new ApiError('Error updatePuerto', 500);
         }
     }
 
@@ -102,14 +102,14 @@ class PuertoService {
         //Borrar un Puerto
         try {
             const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Identificador inválido', 400);
+            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
             const numFilas = await Puerto.destroy({ where: { id_puerto: id } });
-            if (numFilas === 0) throw new ApiError('Puerto no encontrado', 404);
+            if (numFilas === 0) throw new ApiError('Puerto not found', 404);
             return numFilas;
         } catch (err) {
             if (err.status) throw err;
             logMensaje('Error deletePuerto:', err && err.message ? err.message : err);
-            throw new ApiError('Error al borrar puerto', 500);
+            throw new ApiError('Error deletePuerto', 500);
         }
     }
 }

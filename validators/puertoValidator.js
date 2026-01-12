@@ -14,8 +14,7 @@ const puertoSchemaFull = Joi.object({
 // Validación parcial (PATCH)
 const puertoSchemaPartial = puertoSchemaFull.fork(
     Object.keys(puertoSchemaFull.describe().keys),
-    (schema) => schema.optional().min(1)
-);
+    (schema) => schema.optional()).min(1);
 
 module.exports = {
     puertoSchemaFull,

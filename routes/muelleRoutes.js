@@ -4,10 +4,13 @@ const router = express.Router();
 const muelleController = require('../controllers/muelleController');
 const asyncHandler = require('../utils/asyncHandler');
 const validateId = require('../middleware/validateId');
-const { muelleSchemaFull, muelleSchemaPartial } = require('../validators/muelleValidator');
-const validateBody = require('../middleware/validateBody');
 
-router.get('/', asyncHandler(muelleController.getMuelle.bind(muelleController)));
+const validateBody = require('../middleware/validateBody');
+const { muelleSchemaFull, muelleSchemaPartial } = require('../validators/muelleValidator');
+const validateQuery = require('../middleware/validateQuery');
+const muelleQueryValidator = require('../validators/muelleQueryValidator');
+
+router.get('/', validateQuery(muelleQueryValidator), asyncHandler(muelleController.getMuelle.bind(muelleController)));
 router.get('/:id', validateId('id'), asyncHandler(muelleController.getMuelleById.bind(muelleController)));
 router.post('/', validateBody(muelleSchemaFull), asyncHandler(muelleController.createMuelle.bind(muelleController)));
 router.put('/:id', validateBody(muelleSchemaFull), validateId('id'), asyncHandler(muelleController.updateMuelle.bind(muelleController)));

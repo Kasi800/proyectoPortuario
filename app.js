@@ -1,9 +1,8 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-
-// Logger personalizado
-const { logMensaje } = require("./utils/logger.js");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 // Rutas del API
 const puertoRoutes = require("./routes/puertoRoutes.js");
@@ -14,9 +13,14 @@ const errorHandler = require("./middleware/errorHandler.js");
 
 // Inicialización de la aplicación y puerto de escucha
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Parsers y middlewares globales
+// Seguridad HTTP básica
+app.use(helmet());
+
+// Límite de tasa para prevenir abusos (100 peticiones por minuto)
+app.use(rateLimit({ windowMs: 60000, max: 100 }));
+
 // Permite recibir cuerpos JSON en las peticiones
 app.use(express.json());
 
@@ -38,7 +42,4 @@ app.get("/*splat", (req, res) => {
 // Middleware de manejo centralizado de errores
 app.use(errorHandler);
 
-// Arranque del servidor
-app.listen(port, () => {
-    logMensaje(`Servidor escuchando en el puerto ${port}`);
-});
+module.exports = app;

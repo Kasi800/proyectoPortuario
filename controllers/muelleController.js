@@ -18,7 +18,7 @@ class MuelleController {
     async deleteMuelle(req, res) {
         const id_muelle = req.params.id;
         const numFilas = await muelleService.deleteMuelle(id_muelle);
-        return res.status(204).json({ ok: true, data: numFilas, message: "Dock deleted correctly" });
+        return res.status(204).send();
     }
 
     async getMuelleById(req, res) {

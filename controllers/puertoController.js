@@ -18,7 +18,7 @@ class PuertoController {
     async deletePuerto(req, res) {
         const id_puerto = req.params.id;
         const numFilas = await puertoService.deletePuerto(id_puerto);
-        return res.status(204).json({ ok: true, data: numFilas, message: "Port deleted correctly" });
+        return res.status(204).send();
     }
 
     async getPuertoById(req, res) {

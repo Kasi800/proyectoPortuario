@@ -35,4 +35,65 @@ function getAllowedFields(modelo) {
     }
 }
 
-module.exports = { parseValue, getAllowedFields };
+/**
+ * Construye un objeto de consulta compatible con Sequelize a partir
+ * de los parámetros de query HTTP y un modelo Sequelize.
+ *
+ * Comportamiento principal:
+ * - `limit`: por defecto 100; si se proporciona, se parsea y se limita a 1000 como máximo.
+ * - `offset`: por defecto 0; si se proporciona, debe ser un entero >= 0.
+ * - `order`: debe tener formato "campo:direccion" (ej. "nombre:desc");
+ *   solo se aplica si `campo` está en la lista de campos permitidos del modelo.
+ * - Para cada parámetro de query que coincida con un campo permitido se añade
+ *   una entrada en `where` tras convertir el valor con `parseValue`.
+ * - Se ignoran los parámetros especiales `limit`, `offset` y `order` al construir `where`.
+ *
+ * @param {Object} queryParams - objeto con parámetros de consulta (strings)
+ * @param {Object} modelo - modelo Sequelize
+ * @returns {{where: Object, limit: number, offset: number, order: Array}}
+ *          objeto listo para pasar a métodos de consulta de Sequelize
+ */
+function buildSequelizeQuery(queryParams, modelo) {
+    const where = {};
+    const allowed = getAllowedFields(modelo);
+
+    // Valores por defecto para paginación
+    let limit = 100;
+    let offset = 0;
+
+    // Procesar `limit` si está presente (capar a 1000)
+    if (queryParams.limit) {
+        const l = parseInt(queryParams.limit);
+        if (!Number.isNaN(l)) limit = Math.min(l, 1000);
+    }
+
+    // Procesar `offset` si está presente (solo enteros no negativos)
+    if (queryParams.offset) {
+        const o = parseInt(queryParams.offset);
+        if (!Number.isNaN(o) && o >= 0) offset = o;
+    }
+
+    // Procesar `order` si está presente. Formato esperado: campo:direccion
+    let order = [];
+    if (queryParams.order) {
+        const [campo, direccion] = queryParams.order.split(":");
+
+        // Aplicar orden solo si el campo está permitido por el modelo
+        if (allowed.includes(campo)) {
+            order.push([campo, direccion?.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
+        }
+    }
+
+    // Construir `where` usando solo campos permitidos y omitiendo parámetros especiales
+    for (const key in queryParams) {
+        if (["limit", "offset", "order"].includes(key)) continue;
+        if (allowed.length && allowed.indexOf(key) === -1) continue;
+
+        // Convertir el valor de la query a su tipo primitivo más apropiado
+        where[key] = parseValue(queryParams[key]);
+    }
+
+    return { where, limit, offset, order };
+}
+
+module.exports = { parseValue, getAllowedFields, buildSequelizeQuery };

@@ -7,48 +7,17 @@ const initModels = require("../models/init-models.js").initModels;
 const sequelize = require("../config/sequelize.js");
 const { logMensaje } = require("../utils/logger.js");
 const ApiError = require("../utils/ApiError");
-// Cargar las definiciones del modelo en sequelize
-const models = initModels(sequelize);
 // Recuperar el modelo muelle
-const Muelle = models.muelle;
-
-const { parseValue, getAllowedFields } = require("../utils/queryUtils.js");
+const { muelle } = require("../models");
+const { buildSequelizeQuery } = require("../utils/queryUtils.js");
 
 class MuelleService {
 
     async getMuelles(queryParams) {
         // Devuelve todos los Muelles que coincidan con el filtro.
         try {
-            const where = {};
-            const allowed = getAllowedFields(Muelle);
-
-            let limit = 100;
-            let offset = 0;
-            if (queryParams.limit) {
-                const l = parseInt(queryParams.limit, 10);
-                if (!Number.isNaN(l)) limit = Math.min(l, 1000);
-            }
-            if (queryParams.offset) {
-                const o = parseInt(queryParams.offset, 10);
-                if (!Number.isNaN(o) && o >= 0) offset = o;
-            }
-
-            let order = [];
-            if (queryParams.order) {
-                const [campo, direccion] = queryParams.order.split(":");
-
-                if (allowed.includes(campo)) {
-                    order.push([campo, direccion?.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
-                }
-            }
-
-            for (const key in queryParams) {
-                if (["limit", "offset", "order"].includes(key)) continue;
-                if (allowed.length && allowed.indexOf(key) === -1) continue;
-                where[key] = parseValue(queryParams[key]);
-            }
-
-            const result = await Muelle.findAll({ where, limit, offset, order });
+            const queryOptions = buildSequelizeQuery(queryParams, muelle);
+            const result = await muelle.findAll(queryOptions);
             return result;
         } catch (err) {
             logMensaje('Error getMuelles:', err && err.message ? err.message : err);
@@ -61,7 +30,7 @@ class MuelleService {
         try {
             const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
-            const result = await Muelle.findByPk(id);
+            const result = await muelle.findByPk(id);
             if (!result) throw new ApiError('Muelle not found', 404);
             return result;
         } catch (err) {
@@ -71,10 +40,10 @@ class MuelleService {
         }
     }
 
-    async createMuelle(muelle) {
+    async createMuelle(data) {
         //Crea un Muelle
         try {
-            const result = await Muelle.create(muelle);
+            const result = await muelle.create(data);
             return result;
         } catch (err) {
             logMensaje('Error createMuelle:', err && err.message ? err.message : err);
@@ -87,7 +56,7 @@ class MuelleService {
         try {
             const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
-            const [numFilas] = await Muelle.update(data, { where: { id_muelle: id } });
+            const [numFilas] = await muelle.update(data, { where: { id_muelle: id } });
             if (numFilas === 0) throw new ApiError('Muelle not found or without changes', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
         } catch (err) {
@@ -102,7 +71,7 @@ class MuelleService {
         try {
             const id = Number(id_muelle);
             if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
-            const numFilas = await Muelle.destroy({ where: { id_muelle: id } });
+            const numFilas = await muelle.destroy({ where: { id_muelle: id } });
             if (numFilas === 0) throw new ApiError('Muelle not found', 404);
             return numFilas;
         } catch (err) {

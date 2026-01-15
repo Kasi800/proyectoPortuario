@@ -23,16 +23,4 @@ const sequelize = new Sequelize(
   }
 );
 
-// Probar la conexión
-(async () => {
-  try {
-    await sequelize.authenticate();
-    if (process.env.NODE_ENV !== "test") {
-      logMensaje("Conexión exitosa a la base de datos MySQL");
-    }
-  } catch (error) {
-    console.error("Error de conexión:", error);
-  }
-})();
-
 module.exports = sequelize; // Exportar la instancia de Sequelize para usarla en otros archivos

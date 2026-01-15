@@ -34,8 +34,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/puertos", puertoRoutes);
 app.use("/api/muelles", muelleRoutes);
 
+// Error 404
+app.use("/api/*splat", (req, res) => {
+    res.status(404).json({ ok: false, data: null, message: "API Endpoint not found" });
+});
+
 // Enrutado de SPA: devolver `index.html` para rutas no gestionadas por la API
-app.get("/*splat", (req, res) => {
+app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

@@ -3,7 +3,7 @@
 const { logMensaje } = require("../utils/logger.js");
 const ApiError = require("../utils/ApiError");
 // Recuperar el modelo muelle
-const { muelle } = require("../models");
+const { muelle, puerto } = require("../models");
 const { buildSequelizeQuery } = require("../utils/queryUtils.js");
 
 class MuelleService {
@@ -12,7 +12,15 @@ class MuelleService {
         // Devuelve todos los Muelles que coincidan con el filtro.
         try {
             const queryOptions = buildSequelizeQuery(queryParams, muelle);
-            const result = await muelle.findAll(queryOptions);
+
+            // Incluir el modelo puerto para obtener el nombre del puerto asociado
+            queryOptions.include = [{
+                model: puerto,
+                as: 'id_puerto_puerto',
+                attributes: ['nombre']
+            }];
+
+            const result = await muelle.findAndCountAll(queryOptions);
             return result;
         } catch (err) {
             logMensaje('Error getMuelles:', err && err.message ? err.message : err);

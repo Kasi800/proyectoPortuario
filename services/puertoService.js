@@ -12,7 +12,7 @@ class PuertoService {
         // Devuelve todos los Puertos que coincidan con el filtro.
         try {
             const queryOptions = buildSequelizeQuery(queryParams, puerto);
-            const result = await puerto.findAll(queryOptions);
+            const result = await puerto.findAndCountAll(queryOptions);
             return result;
         } catch (err) {
             logMensaje('Error getPuertos:', err && err.message ? err.message : err);

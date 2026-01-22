@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 /**
  * Convierte una cadena de query a su tipo primitivo más apropiado.
  * - "true"  -> true
@@ -84,13 +86,42 @@ function buildSequelizeQuery(queryParams, modelo) {
         }
     }
 
+    // Procesar rangos (_min, _max)
+    for (const key in queryParams) {
+        if (!key.endsWith("_min") && !key.endsWith("_max")) continue;
+
+        const baseField = key.replace(/_(min|max)$/, "");
+
+        // Solo procesar si el campo base existe en el modelo
+        if (!allowed.includes(baseField)) continue;
+
+        const min = queryParams[`${baseField}_min`];
+        const max = queryParams[`${baseField}_max`];
+
+        if (min !== undefined && max !== undefined) {
+            where[baseField] = {
+                [Op.between]: [parseValue(min), parseValue(max)]
+            };
+        } else if (min !== undefined) {
+            where[baseField] = {
+                [Op.gte]: parseValue(min)
+            };
+        } else if (max !== undefined) {
+            where[baseField] = {
+                [Op.lte]: parseValue(max)
+            };
+        }
+    }
+
     // Construir `where` usando solo campos permitidos y omitiendo parámetros especiales
     for (const key in queryParams) {
         if (["limit", "offset", "order"].includes(key)) continue;
-        if (allowed.length && allowed.indexOf(key) === -1) continue;
+        if (key.endsWith('_min') || key.endsWith('_max')) continue;
 
         // Convertir el valor de la query a su tipo primitivo más apropiado
-        where[key] = parseValue(queryParams[key]);
+        if (allowed.includes(key)) {
+            where[key] = parseValue(queryParams[key]);
+        }
     }
 
     return { where, limit, offset, order };

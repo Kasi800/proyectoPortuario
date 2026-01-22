@@ -24,26 +24,48 @@ function filterValidator(model) {
         const attr = model.rawAttributes[field];
 
         // `attr.type.constructor.key` contiene la clave del tipo (ej. INTEGER, STRING)
-        if (attr.type.constructor.key === "INTEGER") {
-            // Enteros
-            schemaShape[field] = Joi.number().integer();
-        } else if (attr.type.constructor.key === "FLOAT" || attr.type.constructor.key === "DOUBLE") {
-            // Números de punto flotante
-            schemaShape[field] = Joi.number();
-        } else if (attr.type.constructor.key === "BOOLEAN") {
-            // Booleanos
-            schemaShape[field] = Joi.boolean();
-        } else if (attr.type.constructor.key === "DATE") {
-            // Fechas
-            schemaShape[field] = Joi.date();
-        } else {
-            // Por defecto tratar como string (STRING, TEXT, etc.)
-            schemaShape[field] = Joi.string();
+        switch (attr.type.constructor.key) {
+            case "INTEGER":
+                schemaShape[field] = Joi.number().integer();
+                schemaShape[`${field}_min`] = Joi.number().integer();
+                schemaShape[`${field}_max`] = Joi.number().integer();
+                break;
+            case "FLOAT":
+            case "DOUBLE":
+            case "DECIMAL":
+                schemaShape[field] = Joi.number();
+                schemaShape[`${field}_min`] = Joi.number();
+                schemaShape[`${field}_max`] = Joi.number();
+                break;
+            case "BOOLEAN":
+                schemaShape[field] = Joi.boolean();
+                break;
+            case "DATE":
+            case "DATEONLY":
+                schemaShape[field] = Joi.date();
+                schemaShape[`${field}_min`] = Joi.date();
+                schemaShape[`${field}_max`] = Joi.date();
+                break;
+            default:
+                schemaShape[field] = Joi.string();
+                break;
         }
     }
 
     // Devolver un objeto Joi que valide exclusivamente las claves definidas
-    return Joi.object(schemaShape).unknown(false);
+    return Joi.object(schemaShape)
+        .custom((value, helpers) => {
+            for (const field of allowed) {
+                const min = value[`${field}_min`];
+                const max = value[`${field}_max`];
+
+                if (min !== undefined && max !== undefined && min > max) {
+                    return helpers.error("any.invalid", { message: `${field}_min no puede ser mayor que ${field}_max` });
+                }
+            }
+            return value;
+        })
+        .unknown(false);
 }
 
 module.exports = filterValidator;

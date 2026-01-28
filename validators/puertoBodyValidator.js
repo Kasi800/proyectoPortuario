@@ -23,7 +23,7 @@ const puertoSchemaFull = Joi.object({
     activo: Joi.boolean().required(),
     fecha_inauguracion: Joi.date().required(),
     profundidad_media: Joi.number().min(0).required()
-});
+}).unknown(false);
 
 // Validación parcial (PATCH) - todas las claves opcionales y al menos una
 const puertoSchemaPartial = puertoSchemaFull.fork(

@@ -31,8 +31,8 @@ class MuelleService {
     async getMuelleById(id_muelle) {
         // Devuelve un Muelle por su id
         try {
-            const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_muelle);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_muelle)) throw new ApiError('Invalid id', 400);
             const result = await muelle.findByPk(id);
             if (!result) throw new ApiError('Muelle not found', 404);
             return result;
@@ -57,8 +57,8 @@ class MuelleService {
     async updateMuelle(id_muelle, data) {
         // Actualiza un Muelle
         try {
-            const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_muelle);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_muelle)) throw new ApiError('Invalid identifier', 400);
             const [numFilas] = await muelle.update(data, { where: { id_muelle: id } });
             if (numFilas === 0) throw new ApiError('Muelle not found or without changes', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
@@ -72,8 +72,8 @@ class MuelleService {
     async deleteMuelle(id_muelle) {
         //Borrar un Muelle
         try {
-            const id = Number(id_muelle);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_muelle);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_muelle)) throw new ApiError('Invalid identifier', 400);
             const numFilas = await muelle.destroy({ where: { id_muelle: id } });
             if (numFilas === 0) throw new ApiError('Muelle not found', 404);
             return numFilas;

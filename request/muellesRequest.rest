@@ -3,70 +3,590 @@
 ###############################################
 GET http://localhost:3000/api/muelles
 
-###
+###############################################
+# GET — Obtener muelles con filtros
+###############################################
 
-# GET — Obtener muelles filtrados (ejemplos)
+### Filtrar por puerto (id_puerto)
+GET http://localhost:3000/api/muelles?id_puerto=1
+
+### Filtrar por estado operativo
 GET http://localhost:3000/api/muelles?operativo=true
 
-###
+### Filtrar por tipo de muelle
 GET http://localhost:3000/api/muelles?tipo=carga
 
-###
+### Filtrar por tipo pasajeros
+GET http://localhost:3000/api/muelles?tipo=pasajeros
+
+### Filtrar por tipo granel
+GET http://localhost:3000/api/muelles?tipo=granel
+
+### Filtrar muelles no operativos
+GET http://localhost:3000/api/muelles?operativo=false
+
+### Combinación de filtros (puerto + operativo)
 GET http://localhost:3000/api/muelles?id_puerto=1&operativo=true
 
+### Combinación de filtros (puerto + tipo)
+GET http://localhost:3000/api/muelles?id_puerto=2&tipo=carga
+
+### Combinación de filtros (tipo + operativo)
+GET http://localhost:3000/api/muelles?tipo=granel&operativo=true
+
+### Combinación de 3 filtros
+GET http://localhost:3000/api/muelles?id_puerto=1&tipo=carga&operativo=true
 
 ###############################################
-# GET — Obtener un muelle por ID
+# GET — Obtener muelles con paginación
 ###############################################
+
+### Primeros 5 muelles
+GET http://localhost:3000/api/muelles?limit=5
+
+### 10 muelles saltando los primeros 5
+GET http://localhost:3000/api/muelles?limit=10&offset=5
+
+### Paginación con filtro (limit + offset + filtro)
+GET http://localhost:3000/api/muelles?limit=3&offset=0&operativo=true
+
+### Segunda página (5 por página)
+GET http://localhost:3000/api/muelles?limit=5&offset=5
+
+### Tercera página (3 por página)
+GET http://localhost:3000/api/muelles?limit=3&offset=6
+
+
+###############################################
+# GET — Obtener muelles con ordenamiento
+###############################################
+
+### Ordenar por nombre ascendente
+GET http://localhost:3000/api/muelles?order=nombre:ASC
+
+### Ordenar por nombre descendente
+GET http://localhost:3000/api/muelles?order=nombre:DESC
+
+### Ordenar por longitud ascendente
+GET http://localhost:3000/api/muelles?order=longitud_m:ASC
+
+### Ordenar por calado descendente
+GET http://localhost:3000/api/muelles?order=calado_m:DESC
+
+### Ordenar por fecha de construcción
+GET http://localhost:3000/api/muelles?order=fecha_construccion:ASC
+
+### Ordenar con filtro y paginación
+GET http://localhost:3000/api/muelles?operativo=true&limit=5&order=nombre:ASC
+
+###############################################
+# GET — Obtener un muelle específico por ID
+###############################################
+
+### Obtener muelle con ID 1
 GET http://localhost:3000/api/muelles/1
 
+### Obtener muelle con ID 2
+GET http://localhost:3000/api/muelles/2
+
+### Obtener muelle con ID 5
+GET http://localhost:3000/api/muelles/5
 
 ###############################################
-# POST — Crear un nuevo muelle
+# POST — Crear nuevos muelles
 ###############################################
+
+### Crear muelle de carga básico
 POST http://localhost:3000/api/muelles
 Content-Type: application/json
 
 {
   "id_puerto": 1,
-  "nombre": "Muelle Experimental",
-  "longitud_m": 850.5,
-  "calado_m": 11.2,
+  "nombre": "Muelle de Carga A",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
   "operativo": true,
-  "fecha_construccion": "2020-06-10",
-  "tipo": "mixto"
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
 }
 
-
-###############################################
-# PUT — Modificar un muelle COMPLETO
-###############################################
-PUT http://localhost:3000/api/muelles/8
+### Crear muelle de pasajeros
+POST http://localhost:3000/api/muelles
 Content-Type: application/json
 
 {
   "id_puerto": 1,
-  "nombre": "Muelle Norte Renovado",
-  "longitud_m": 1200.0,
-  "calado_m": 14.5,
-  "operativo": false,
-  "fecha_construccion": "1988-02-14",
-  "tipo": "carga"
+  "nombre": "Muelle de Pasajeros Terminal Sur",
+  "longitud_m": 350.0,
+  "calado_m": 9.0,
+  "operativo": true,
+  "fecha_construccion": "2018-07-20",
+  "tipo": "pasajeros"
 }
 
-
-###############################################
-# PATCH — Modificar un muelle PARCIALMENTE
-###############################################
-PATCH http://localhost:3000/api/muelles/8
+### Crear muelle granel
+POST http://localhost:3000/api/muelles
 Content-Type: application/json
 
 {
-  "operativo": true
+  "id_puerto": 2,
+  "nombre": "Muelle granel Multiproposito",
+  "longitud_m": 750.0,
+  "calado_m": 12.5,
+  "operativo": true,
+  "fecha_construccion": "2019-11-10",
+  "tipo": "granel"
+}
+
+### Crear muelle con calado profundo
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 3,
+  "nombre": "Muelle Profundo Mega-Buques",
+  "longitud_m": 1200.0,
+  "calado_m": 16.0,
+  "operativo": true,
+  "fecha_construccion": "2010-01-01",
+  "tipo": "carga"
+}
+
+### Crear muelle inoperativo
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 2,
+  "nombre": "Muelle en Mantenimiento",
+  "longitud_m": 400.0,
+  "calado_m": 8.5,
+  "operativo": false,
+  "fecha_construccion": "2005-05-25",
+  "tipo": "carga"
+}
+
+### Crear muelle vintage (antigua construcción)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Histórico Puerto Viejo",
+  "longitud_m": 280.0,
+  "calado_m": 6.5,
+  "operativo": true,
+  "fecha_construccion": "1950-06-15",
+  "tipo": "pasajeros"
 }
 
 
 ###############################################
-# DELETE — Eliminar un muelle
+# PUT — Actualizar muelle completo
 ###############################################
-DELETE http://localhost:3000/api/muelles/8
+
+### Actualizar muelle 1 completamente
+PUT http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Norte Completamente Renovado",
+  "longitud_m": 900.0,
+  "calado_m": 13.5,
+  "operativo": true,
+  "fecha_construccion": "2020-01-10",
+  "tipo": "granel"
+}
+
+### Cambiar muelle de puerto
+PUT http://localhost:3000/api/muelles/2
+Content-Type: application/json
+
+{
+  "id_puerto": 2,
+  "nombre": "Muelle Sur Trasladado",
+  "longitud_m": 600.0,
+  "calado_m": 11.0,
+  "operativo": true,
+  "fecha_construccion": "2017-08-22",
+  "tipo": "carga"
+}
+
+### Cambiar tipo de muelle
+PUT http://localhost:3000/api/muelles/3
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle de Carga Especializado",
+  "longitud_m": 550.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2016-04-14",
+  "tipo": "pasajeros"
+}
+
+
+###############################################
+# PATCH — Actualizar muelle parcialmente
+###############################################
+
+### Cambiar solo el nombre
+PATCH http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "nombre": "Muelle del Atlántico"
+}
+
+### Cambiar solo el estado operativo
+PATCH http://localhost:3000/api/muelles/2
+Content-Type: application/json
+
+{
+  "operativo": false
+}
+
+### Cambiar solo el tipo
+PATCH http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "tipo": "pasajeros"
+}
+
+### Cambiar solo la longitud
+PATCH http://localhost:3000/api/muelles/2
+Content-Type: application/json
+
+{
+  "longitud_m": 650.0
+}
+
+### Cambiar solo el calado
+PATCH http://localhost:3000/api/muelles/3
+Content-Type: application/json
+
+{
+  "calado_m": 14.0
+}
+
+### Cambiar múltiples campos (nombre y estado)
+PATCH http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "nombre": "Muelle Este Ampliado",
+  "longitud_m": 800.0
+}
+
+### Cambiar múltiples campos (operativo, tipo y calado)
+PATCH http://localhost:3000/api/muelles/2
+Content-Type: application/json
+
+{
+  "operativo": true,
+  "tipo": "carga",
+  "calado_m": 12.0
+}
+
+
+###############################################
+# DELETE — Eliminar muelles
+###############################################
+
+### Eliminar muelle con ID 10
+DELETE http://localhost:3000/api/muelles/10
+
+### Eliminar muelle con ID 11
+DELETE http://localhost:3000/api/muelles/11
+
+
+###############################################
+# CASOS DE ERROR - 400 BAD REQUEST
+###############################################
+
+### ERROR: POST sin Content-Type
+POST http://localhost:3000/api/muelles
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle de Prueba",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST falta campo requerido (nombre)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST falta campo requerido (id_puerto)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "nombre": "Muelle Incompleto",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST tipo inválido (debe ser: carga, pasajeros o granel)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Tipo Inválido",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "especial"
+}
+
+### ERROR: POST id_puerto negativo
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": -1,
+  "nombre": "Muelle Puerto Negativo",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST id_puerto es 0
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 0,
+  "nombre": "Muelle Puerto Cero",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST nombre muy corto (menos de 2 caracteres)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "A",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST nombre muy largo (más de 100 caracteres)
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Este es un muelle con un nombre extremadamente largo que supera el límite máximo de caracteres permitido en el sistema",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: POST fecha inválida
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Fecha Inválida",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "fecha-invalida",
+  "tipo": "carga"
+}
+
+### ERROR: POST operativo no es booleano
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Operativo Inválido",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": "sí",
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: PUT sin todos los campos requeridos (falta id_puerto)
+PUT http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "nombre": "Muelle Incompleto PUT",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: PATCH sin enviar ningún campo
+PATCH http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+}
+
+### ERROR: PATCH con tipo inválido
+PATCH http://localhost:3000/api/muelles/1
+Content-Type: application/json
+
+{
+  "tipo": "especial"
+}
+
+### ERROR: PATCH con operativo no booleano
+PATCH http://localhost:3000/api/muelles/2
+Content-Type: application/json
+
+{
+  "operativo": "no"
+}
+
+### ERROR: Filtro con operativo inválido en query
+GET http://localhost:3000/api/muelles?operativo=quizás
+
+
+###############################################
+# CASOS DE ERROR - 404 NOT FOUND
+###############################################
+
+### ERROR: GET muelle inexistente ID 999
+GET http://localhost:3000/api/muelles/999
+
+### ERROR: PUT muelle inexistente ID 999
+PUT http://localhost:3000/api/muelles/999
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Fantasma",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: PATCH muelle inexistente ID 999
+PATCH http://localhost:3000/api/muelles/999
+Content-Type: application/json
+
+{
+  "nombre": "Muelle Fantasma Patch"
+}
+
+### ERROR: DELETE muelle inexistente ID 999
+DELETE http://localhost:3000/api/muelles/999
+
+
+###############################################
+# CASOS DE ERROR - 400 INVALID ID
+###############################################
+
+### ERROR: ID no es número (texto)
+GET http://localhost:3000/api/muelles/abc
+
+### ERROR: ID negativo
+GET http://localhost:3000/api/muelles/-5
+
+### ERROR: ID decimal
+GET http://localhost:3000/api/muelles/1.5
+
+### ERROR: PUT con ID inválido (texto)
+PUT http://localhost:3000/api/muelles/xyz
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle con ID inválido",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga"
+}
+
+### ERROR: PATCH con ID inválido (negativo)
+PATCH http://localhost:3000/api/muelles/-1
+Content-Type: application/json
+
+{
+  "nombre": "Muelle"
+}
+
+### ERROR: DELETE con ID inválido
+DELETE http://localhost:3000/api/muelles/texto
+
+
+###############################################
+# CASOS DE ERROR - VALIDACIÓN AVANZADA
+###############################################
+
+### ERROR: POST con campos extra no permitidos
+POST http://localhost:3000/api/muelles
+Content-Type: application/json
+
+{
+  "id_puerto": 1,
+  "nombre": "Muelle Extra",
+  "longitud_m": 500.0,
+  "calado_m": 10.5,
+  "operativo": true,
+  "fecha_construccion": "2015-03-15",
+  "tipo": "carga",
+  "campo_extra": "no permitido",
+  "otro_campo": 12345
+}
+
+### ERROR: Query con limit inválido (negativo)
+GET http://localhost:3000/api/muelles?limit=-5
+
+### ERROR: Query con offset inválido (negativo)
+GET http://localhost:3000/api/muelles?offset=-10
+
+### ERROR: Query con order inválido (campo no existe)
+GET http://localhost:3000/api/muelles?order=campo_inexistente:ASC
+
+### ERROR: Query con order formato incorrecto (sin :ASC o :DESC)
+GET http://localhost:3000/api/muelles?order=nombre
+
+### ERROR: Query con order dirección inválida
+GET http://localhost:3000/api/muelles?order=nombre:INVALID

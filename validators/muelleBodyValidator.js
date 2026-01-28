@@ -12,7 +12,7 @@ const Joi = require("joi");
  * - `longitud_m`, `calado_m`: medidas numéricas >= 0.
  * - `operativo`: booleano que indica estado operativo.
  * - `fecha_construccion`: fecha válida.
- * - `tipo`: enum restringido a `carga`, `pasajeros` o `mixto`.
+ * - `tipo`: enum restringido a `carga`, `pasajeros` o `granel`.
  */
 
 // Validación (POST y PUT) - todos los campos requeridos
@@ -23,8 +23,8 @@ const muelleSchemaFull = Joi.object({
     calado_m: Joi.number().min(0).required(),
     operativo: Joi.boolean().required(),
     fecha_construccion: Joi.date().required(),
-    tipo: Joi.string().valid("carga", "pasajeros", "mixto").required()
-});
+    tipo: Joi.string().valid("carga", "pasajeros", "granel").required()
+}).unknown(false);
 
 // Validación parcial (PATCH) - todas las claves opcionales y al menos una
 const muelleSchemaPartial = muelleSchemaFull.fork(

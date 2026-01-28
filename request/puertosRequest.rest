@@ -1,0 +1,591 @@
+###############################################
+# GET — Obtener todos los puertos
+###############################################
+GET http://localhost:3000/api/puertos
+
+
+###############################################
+# GET — Obtener puertos con filtros
+###############################################
+
+### Filtrar por ciudad
+GET http://localhost:3000/api/puertos?ciudad=Valencia
+
+### Filtrar por ciudad (Barcelona)
+GET http://localhost:3000/api/puertos?ciudad=Barcelona
+
+### Filtrar por país
+GET http://localhost:3000/api/puertos?pais=España
+
+### Filtrar por estado activo
+GET http://localhost:3000/api/puertos?activo=true
+
+### Filtrar por estado inactivo
+GET http://localhost:3000/api/puertos?activo=false
+
+### Filtrar por capacidad mínima
+GET http://localhost:3000/api/puertos?capacidad_teu=1000000
+
+### Combinación de filtros (ciudad + activo)
+GET http://localhost:3000/api/puertos?ciudad=Valencia&activo=true
+
+### Combinación de filtros (país + estado activo)
+GET http://localhost:3000/api/puertos?pais=España&activo=true
+
+### Combinación de 3 filtros (país, ciudad, activo)
+GET http://localhost:3000/api/puertos?pais=España&ciudad=Valencia&activo=true
+
+
+###############################################
+# GET — Obtener puertos con paginación
+###############################################
+
+### Primeros 5 puertos
+GET http://localhost:3000/api/puertos?limit=5
+
+### 10 puertos saltando los primeros 0
+GET http://localhost:3000/api/puertos?limit=10&offset=0
+
+### 10 puertos saltando los primeros 10
+GET http://localhost:3000/api/puertos?limit=10&offset=10
+
+### Paginación con filtro (limit + offset + filtro)
+GET http://localhost:3000/api/puertos?limit=3&offset=0&activo=true
+
+### Segunda página (3 por página)
+GET http://localhost:3000/api/puertos?limit=3&offset=3
+
+### Tercera página (3 por página)
+GET http://localhost:3000/api/puertos?limit=3&offset=6
+
+
+###############################################
+# GET — Obtener puertos con ordenamiento
+###############################################
+
+### Ordenar por nombre ascendente
+GET http://localhost:3000/api/puertos?order=nombre:ASC
+
+### Ordenar por nombre descendente
+GET http://localhost:3000/api/puertos?order=nombre:DESC
+
+### Ordenar por ciudad ascendente
+GET http://localhost:3000/api/puertos?order=ciudad:ASC
+
+### Ordenar por capacidad descendente (mayor capacidad primero)
+GET http://localhost:3000/api/puertos?order=capacidad_teu:DESC
+
+### Ordenar por profundidad media
+GET http://localhost:3000/api/puertos?order=profundidad_media:DESC
+
+### Ordenar por fecha de inauguración descendente (más recientes primero)
+GET http://localhost:3000/api/puertos?order=fecha_inauguracion:DESC
+
+### Ordenar con filtro y paginación
+GET http://localhost:3000/api/puertos?activo=true&limit=5&order=nombre:ASC
+
+
+###############################################
+# GET — Obtener un puerto específico por ID
+###############################################
+
+### Obtener puerto con ID 1
+GET http://localhost:3000/api/puertos/1
+
+### Obtener puerto con ID 2
+GET http://localhost:3000/api/puertos/2
+
+### Obtener puerto con ID 3
+GET http://localhost:3000/api/puertos/3
+
+### Obtener puerto con ID 5
+GET http://localhost:3000/api/puertos/5
+
+
+###############################################
+# POST — Crear nuevos puertos
+###############################################
+
+### Crear puerto básico
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Alicante",
+  "ciudad": "Alicante",
+  "pais": "España",
+  "capacidad_teu": 800000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### Crear puerto de gran capacidad
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Róterdam",
+  "ciudad": "Róterdam",
+  "pais": "Países Bajos",
+  "capacidad_teu": 14000000,
+  "activo": true,
+  "fecha_inauguracion": "1962-10-05",
+  "profundidad_media": 15.5
+}
+
+### Crear puerto con profundidad media
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Tánger Med",
+  "ciudad": "Tánger",
+  "pais": "Marruecos",
+  "capacidad_teu": 6000000,
+  "activo": true,
+  "fecha_inauguracion": "2007-01-15",
+  "profundidad_media": 18.0
+}
+
+### Crear puerto inactivo
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Almería Histórico",
+  "ciudad": "Almería",
+  "pais": "España",
+  "capacidad_teu": 400000,
+  "activo": false,
+  "fecha_inauguracion": "1975-09-20",
+  "profundidad_media": 8.0
+}
+
+### Crear puerto reciente
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Abu Dabi",
+  "ciudad": "Abu Dabi",
+  "pais": "Emiratos Árabes Unidos",
+  "capacidad_teu": 2000000,
+  "activo": true,
+  "fecha_inauguracion": "2012-11-01",
+  "profundidad_media": 13.5
+}
+
+
+###############################################
+# PUT — Actualizar puerto completamente
+###############################################
+
+### Actualizar puerto 1
+PUT http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Valencia Renovado",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 5500000,
+  "activo": true,
+  "fecha_inauguracion": "1975-01-15",
+  "profundidad_media": 14.5
+}
+
+### Actualizar puerto 2
+PUT http://localhost:3000/api/puertos/2
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Principal Barcelona",
+  "ciudad": "Barcelona",
+  "pais": "España",
+  "capacidad_teu": 3500000,
+  "activo": true,
+  "fecha_inauguracion": "1882-04-22",
+  "profundidad_media": 13.0
+}
+
+### Actualizar puerto 3
+PUT http://localhost:3000/api/puertos/3
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Bilbao Ampliado",
+  "ciudad": "Bilbao",
+  "pais": "España",
+  "capacidad_teu": 2500000,
+  "activo": true,
+  "fecha_inauguracion": "1970-03-10",
+  "profundidad_media": 11.5
+}
+
+
+###############################################
+# PATCH — Actualizar puerto parcialmente
+###############################################
+
+### Cambiar solo el nombre
+PATCH http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Autónomo de Valencia"
+}
+
+### Cambiar solo el estado activo
+PATCH http://localhost:3000/api/puertos/3
+Content-Type: application/json
+
+{
+  "activo": false
+}
+
+### Cambiar solo la profundidad media
+PATCH http://localhost:3000/api/puertos/2
+Content-Type: application/json
+
+{
+  "profundidad_media": 15.0
+}
+
+### Cambiar múltiples campos (nombre y capacidad)
+PATCH http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+  "nombre": "Puerto de Valencia Megacontenedor",
+  "capacidad_teu": 7000000
+}
+
+### Cambiar múltiples campos (activo, profundidad y capacidad)
+PATCH http://localhost:3000/api/puertos/2
+Content-Type: application/json
+
+{
+  "activo": true,
+  "profundidad_media": 16.0,
+  "capacidad_teu": 5000000
+}
+
+### Reactivar puerto después de mantenimiento
+PATCH http://localhost:3000/api/puertos/3
+Content-Type: application/json
+
+{
+  "activo": true
+}
+
+
+###############################################
+# DELETE — Eliminar puertos
+###############################################
+
+### Eliminar puerto con ID 10
+DELETE http://localhost:3000/api/puertos/10
+
+### Eliminar puerto con ID 11
+DELETE http://localhost:3000/api/puertos/11
+
+### Eliminar puerto con ID 12
+DELETE http://localhost:3000/api/puertos/12
+
+
+###############################################
+# CASOS DE ERROR - 400 BAD REQUEST
+###############################################
+
+### ERROR: POST sin Content-Type
+POST http://localhost:3000/api/puertos
+
+{
+  "nombre": "Puerto de Prueba",
+  "ciudad": "Prueba",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST falta campo requerido (nombre)
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST falta campo requerido (ciudad)
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Incompleto",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST falta campo requerido (activo)
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Sin Estado",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST capacidad_teu negativa
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Capacidad Negativa",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": -1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST profundidad_media negativa
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Profundidad Negativa",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": -10.5
+}
+
+### ERROR: POST nombre muy corto
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "P",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST nombre muy largo
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Este es un puerto con un nombre extremadamente largo que supera el límite máximo de caracteres permitido en el sistema",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST fecha inválida
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Fecha Inválida",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "fecha-invalida",
+  "profundidad_media": 10.5
+}
+
+### ERROR: POST activo no es booleano
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Activo Inválido",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": "sí",
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: PUT sin todos los campos requeridos (falta pais)
+PUT http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Incompleto",
+  "ciudad": "Valencia",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: PATCH sin enviar ningún campo
+PATCH http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+}
+
+### ERROR: PATCH con activo no booleano
+PATCH http://localhost:3000/api/puertos/1
+Content-Type: application/json
+
+{
+  "activo": "inactivo"
+}
+
+### ERROR: PATCH con capacidad_teu negativa
+PATCH http://localhost:3000/api/puertos/2
+Content-Type: application/json
+
+{
+  "capacidad_teu": -500000
+}
+
+### ERROR: Filtro con activo inválido en query
+GET http://localhost:3000/api/puertos?activo=quizás
+
+### ERROR: Filtro con capacidad_teu inválida en query
+GET http://localhost:3000/api/puertos?capacidad_teu=texto
+
+
+###############################################
+# CASOS DE ERROR - 404 NOT FOUND
+###############################################
+
+### ERROR: GET puerto inexistente ID 999
+GET http://localhost:3000/api/puertos/999
+
+### ERROR: PUT puerto inexistente ID 999
+PUT http://localhost:3000/api/puertos/999
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Fantasma",
+  "ciudad": "Fantasía",
+  "pais": "País de Nunca Jamás",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: PATCH puerto inexistente ID 999
+PATCH http://localhost:3000/api/puertos/999
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Fantasma Patch"
+}
+
+### ERROR: DELETE puerto inexistente ID 999
+DELETE http://localhost:3000/api/puertos/999
+
+
+###############################################
+# CASOS DE ERROR - 400 INVALID ID
+###############################################
+
+### ERROR: ID no es número (texto)
+GET http://localhost:3000/api/puertos/abc
+
+### ERROR: ID negativo
+GET http://localhost:3000/api/puertos/-5
+
+### ERROR: ID decimal
+GET http://localhost:3000/api/puertos/1.5
+
+### ERROR: PUT con ID inválido (texto)
+PUT http://localhost:3000/api/puertos/xyz
+Content-Type: application/json
+
+{
+  "nombre": "Puerto con ID inválido",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5
+}
+
+### ERROR: PATCH con ID inválido (negativo)
+PATCH http://localhost:3000/api/puertos/-1
+Content-Type: application/json
+
+{
+  "nombre": "Puerto"
+}
+
+### ERROR: DELETE con ID inválido
+DELETE http://localhost:3000/api/puertos/texto
+
+
+###############################################
+# CASOS DE ERROR - VALIDACIÓN AVANZADA
+###############################################
+
+### ERROR: POST con campos extra no permitidos
+POST http://localhost:3000/api/puertos
+Content-Type: application/json
+
+{
+  "nombre": "Puerto Extra",
+  "ciudad": "Valencia",
+  "pais": "España",
+  "capacidad_teu": 1000000,
+  "activo": true,
+  "fecha_inauguracion": "1965-03-20",
+  "profundidad_media": 10.5,
+  "campo_extra": "no permitido",
+  "otro_campo": 12345
+}
+
+### ERROR: Query con limit inválido (negativo)
+GET http://localhost:3000/api/puertos?limit=-5
+
+### ERROR: Query con offset inválido (negativo)
+GET http://localhost:3000/api/puertos?offset=-10
+
+### ERROR: Query con order inválido (campo no existe)
+GET http://localhost:3000/api/puertos?order=campo_inexistente:ASC
+
+### ERROR: Query con order formato incorrecto (sin :ASC o :DESC)
+GET http://localhost:3000/api/puertos?order=nombre
+
+### ERROR: Query con order dirección inválida
+GET http://localhost:3000/api/puertos?order=nombre:INVALID
+
+### ERROR: Query con capacidad_teu como texto
+GET http://localhost:3000/api/puertos?capacidad_teu=mucho
+
+### ERROR: Query con profundidad_media como texto
+GET http://localhost:3000/api/puertos?profundidad_media=profunda

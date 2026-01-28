@@ -23,8 +23,8 @@ class PuertoService {
     async getPuertoById(id_puerto) {
         // Devuelve un Puerto por su id
         try {
-            const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_puerto);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_puerto)) throw new ApiError('Invalid id', 400);
             const result = await puerto.findByPk(id);
             if (!result) throw new ApiError('Puerto not found', 404);
             return result;
@@ -49,8 +49,8 @@ class PuertoService {
     async updatePuerto(id_puerto, data) {
         // Actualiza un puerto
         try {
-            const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_puerto);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_puerto)) throw new ApiError('Invalid id', 400);
             const [numFilas] = await puerto.update(data, { where: { id_puerto: id } });
             if (numFilas === 0) throw new ApiError('Puerto not found or without changes', 404);
             return numFilas; // 0 = no actualizado, 1 = actualizado
@@ -64,8 +64,8 @@ class PuertoService {
     async deletePuerto(id_puerto) {
         //Borrar un Puerto
         try {
-            const id = Number(id_puerto);
-            if (!Number.isFinite(id)) throw new ApiError('Invalid id', 400);
+            const id = parseInt(id_puerto);
+            if (id <= 0 || !Number.isFinite(id) || String(id) !== String(id_puerto)) throw new ApiError('Invalid id', 400);
             const numFilas = await puerto.destroy({ where: { id_puerto: id } });
             if (numFilas === 0) throw new ApiError('Puerto not found', 404);
             return numFilas;

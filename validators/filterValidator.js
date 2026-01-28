@@ -1,25 +1,33 @@
+/*
+ * filterValidator.js - Generador dinámico de validaciones para filtros
+ * Crea esquemas Joi basados en la estructura de los modelos de Sequelize
+ */
+
 const Joi = require("joi");
 
+// ============================================================
+// GENERADOR DE ESQUEMAS DE FILTRADO
+// ============================================================
+
 /**
- * Construye y devuelve un validador Joi dinámico para los filtros
- * basados en los atributos (`rawAttributes`) de un modelo Sequelize.
- *
- * Uso: validar query params recibidos para búsquedas/filtrado antes
- * de pasarlos al servicio.
- *
- * Nota: el validador no permite claves desconocidas (`unknown(false)`).
+ * Construye un validador Joi dinámico basado en los atributos de un modelo
  * 
- * @param {Object} model - Modelo Sequelize (se usa `model.rawAttributes`)
- * @returns {Joi.Schema} Esquema Joi para validar filtros
+ * Funcionalidades:
+ * - Mapeo automático: Convierte tipos de Sequelize (INT, DATE, etc.) a tipos Joi
+ * - Rangos: Crea automáticamente campos _min y _max para tipos numéricos y fechas
+ * - Validación lógica: Verifica que los valores mínimos no superen a los máximos
+ * - Seguridad: Bloquea cualquier parámetro no definido en el modelo (unknown: false)
+ * 
+ * @param {Object} model - Modelo de Sequelize a inspeccionar
+ * @returns {Joi.ObjectSchema} Esquema Joi configurado
  */
 function filterValidator(model) {
     // Campos permitidos a partir de la definición del modelo
     const allowed = Object.keys(model.rawAttributes);
-
     // Forma del esquema Joi que iremos construyendo dinámicamente
     const schemaShape = {};
 
-    // Mapear tipos Sequelize a validadores Joi apropiados
+    // Mapear tipos de datos del modelo a reglas de Joi
     for (const field of allowed) {
         const attr = model.rawAttributes[field];
 
@@ -47,25 +55,27 @@ function filterValidator(model) {
                 schemaShape[`${field}_max`] = Joi.date();
                 break;
             default:
+                // Por defecto tratar como string (búsquedas parciales)
                 schemaShape[field] = Joi.string();
                 break;
         }
     }
 
-    // Devolver un objeto Joi que valide exclusivamente las claves definidas
+    // Retornar objeto Joi con lógica de validación cruzada para rangos
     return Joi.object(schemaShape)
         .custom((value, helpers) => {
             for (const field of allowed) {
                 const min = value[`${field}_min`];
                 const max = value[`${field}_max`];
 
+                // Validar que el rango sea coherente
                 if (min !== undefined && max !== undefined && min > max) {
                     return helpers.error("any.invalid", { message: `${field}_min no puede ser mayor que ${field}_max` });
                 }
             }
             return value;
         })
-        .unknown(false);
+        .unknown(false); // No permitir campos ajenos al modelo
 }
 
 module.exports = filterValidator;

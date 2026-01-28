@@ -1,21 +1,34 @@
+/*
+ * orderValidator.js - Validador de criterios de ordenación
+ * Valida parámetros de ordenamiento con formato 'campo:dirección'
+ */
+
 const Joi = require("joi");
 
+// ============================================================
+// VALIDADOR DE ORDEN (SORTING)
+// ============================================================
+
 /**
- * Validador de ordenación para query params `order` del tipo `campo:asc|desc`.
- *
- * - Acepta una cadena que cumpla el patrón `nombre_campo:asc` o `nombre_campo:desc`.
- * - Comprueba que `nombre_campo` esté dentro de `allowedFields`.
- *
- * Ejemplo válido: `nombre:asc` o `capacidad_teu:desc`
+ * Construye una regla de validación para el parámetro de ordenación
  * 
- * @param {string[]} allowedFields - Lista de campos permitidos para ordenar
- * @returns {Joi.Schema} Esquema Joi para validar el parámetro de orden
+ * Funcionalidades:
+ * - Formato: Exige el patrón 'nombre_columna:asc' o 'nombre_columna:desc'
+ * - Restricción: Verifica que la columna exista en la lista de campos permitidos
+ * - Flexibilidad: Permite el uso de mayúsculas/minúsculas en la dirección (i)
+ * 
+ * @param {string[]} allowedFields - Array con los nombres de columnas permitidas
+ * @returns {Joi.StringSchema} Esquema Joi para validar el string de orden
+ * 
+ * @example
+ * const schema = orderValidator(['nombre']);
+ * // Válido: "nombre:asc", "nombre:DESC" | Inválido: "precio:asc"
  */
 function orderValidator(allowedFields) {
     return Joi.string()
-        // Patrón básico: letras/guiones bajos + ':' + 'asc'|'desc' (insensible a mayúsculas)
+        // Validar estructura básica mediante expresión regular
         .pattern(/^[a-zA-Z_]+:(asc|desc)$/i)
-        // Validación personalizada para asegurar que el campo exista en la lista permitida
+        // Validar que el campo específico sea una columna real del modelo
         .custom((value, helpers) => {
             // Separar 'campo' y 'dirección' y comprobar sólo el campo
             const [campo] = value.split(":");

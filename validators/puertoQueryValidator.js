@@ -1,13 +1,20 @@
+/*
+ * puertoQueryValidator.js - Validador de consultas para Puertos
+ * Genera el esquema de validación para parámetros de búsqueda y filtrado de puertos
+ */
+
 const queryValidator = require("./queryValidator");
-// Cargar modelos inicializados pasando la instancia de Sequelize
-// `init-models` devuelve un objeto con todos los modelos
-const models = require("../models/init-models")(require("../config/sequelize"));
+const { puerto } = require("../models");
 
 /**
- * Validador específico para consultas sobre `puerto`.
- *
- * Construye y exporta el esquema Joi para validar query params (limit, offset,
- * order y filtros) basado en la definición del modelo `puerto`.
+ * Esquema de validación para consultas sobre el modelo 'puerto'
+ * 
+ * Utiliza la lógica centralizada para validar:
+ * - Filtros dinámicos (nombre, ciudad, etc.)
+ * - Paginación (limit, offset)
+ * - Ordenamiento
+ * 
+ * @type {Joi.ObjectSchema}
  */
-const puertoQueryValidator = queryValidator(models.puerto);
+const puertoQueryValidator = queryValidator(puerto);
 module.exports = puertoQueryValidator;

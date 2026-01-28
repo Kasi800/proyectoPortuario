@@ -1,22 +1,31 @@
-const { logMensaje } = require("../utils/logger.js");
-// Importar libreria para manejo de ficheros de configuración dependiendo de la variable de entorno NODE_ENV
+/*
+ * config.js - Configuración centralizada de la aplicación
+ * Carga variables de entorno y proporciona valores por defecto
+ */
+
+// ============================================================
+// CARGAR VARIABLES DE ENTORNO
+// ============================================================
+
+// Cargar archivo .env en la raíz del proyecto
 require("dotenv").config({
   path: `.env`,
 });
 
+// ============================================================
+// CONFIGURACIÓN DE LA APLICACIÓN
+// ============================================================
+
 module.exports = {
+  // Puerto del servidor (por defecto 3000)
   port: process.env.PORT || 3000,
+  
+  // Configuración de la base de datos
   db: {
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "test",
     name: process.env.DB_NAME || "infraestructura_portuaria",
     port: process.env.DB_PORT || 3306,
-  },
-  secretKey: process.env.SECRET_KEY || "default_secret",
+  }
 };
-
-logMensaje("DBNAME:", process.env.DB_NAME);
-logMensaje("DBHOST:", process.env.DB_HOST);
-logMensaje("DBUSER:", process.env.DB_USER);
-logMensaje("DBPORT:", process.env.DB_PORT);

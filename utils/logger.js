@@ -1,16 +1,19 @@
-/**
- * Logger centralizado con soporte para `winston` si está disponible.
- *
- * - Intenta cargar `winston` y configurar un logger JSON con timestamps.
- * - Si `winston` no está instalado, proporciona un fallback que escribe
- *   a `console` incluyendo la marca de tiempo. Esto evita fallos en
- *   entornos de desarrollo donde winston no se haya instalado.
+/*
+ * logger.js - Sistema centralizado de logging
+ * Usa Winston si está disponible, con fallback a console
  */
+
+// ============================================================
+// INICIALIZACIÓN DEL LOGGER
+// ============================================================
+
 let logger = null;
+
 try {
+  // Intentar cargar Winston
   const winston = require('winston');
   logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
+    level: 'info',
     format: winston.format.combine(
       winston.format.timestamp(),
       winston.format.errors({ stack: true }),
@@ -19,42 +22,47 @@ try {
     transports: [new winston.transports.Console()]
   });
 } catch (e) {
-  // Winston no disponible — usar fallback console
+  // Fallback: si Winston no está instalado, usar console con timestamp
   logger = {
     info: (...args) => console.log(new Date().toISOString(), ...args),
     error: (...args) => console.error(new Date().toISOString(), ...args),
-    debug: (...args) => console.debug(new Date().toISOString(), ...args)
+    debug: (...args) => console.debug(new Date().toISOString(), ...args),
+    warn: (...args) => console.warn(new Date().toISOString(), ...args)
   };
 }
 
+// ============================================================
+// FUNCIONES DE LOGGING
+// ============================================================
+
 /**
- * Registrar un mensaje informativo.
- * @param  {...any} args
+ * Registra un mensaje informativo
+ * @param {...any} args - Argumentos a registrar
  */
 function logMensaje(...args) {
   logger.info(...args);
 }
 
 /**
- * Registrar un mensaje de error.
- * @param  {...any} args
+ * Registra un mensaje de error
+ * @param {...any} args - Argumentos a registrar
  */
 function logError(...args) {
   logger.error(...args);
 }
 
 /**
- * Registrar un mensaje de warn.
- * @param  {...any} args
+ * Registra un mensaje de advertencia
+ * @param {...any} args - Argumentos a registrar
  */
 function logWarn(...args) {
   logger.warn(...args);
 }
 
 /**
- * Registrar errores SQL de forma estructurada para facilitar el diagnóstico.
- * Extrae campos comunes de errores de MySQL/MariaDB.
- * @param {Error} err
+ * Registra errores de SQL de forma estructurada
+ * Extrae información útil de errores MySQL/MariaDB
+ * @param {Error} err - Error de la base de datos
  */
 function logErrorSQL(err) {
   logger.error('Error de MySQL:', {

@@ -1,13 +1,21 @@
+/*
+ * muelleQueryValidator.js - Validador de consultas para Muelles
+ * Genera el esquema de validación para parámetros de búsqueda (filtros, paginación, orden)
+ */
+
 const queryValidator = require("./queryValidator");
-// Cargar modelos inicializados pasando la instancia de Sequelize
-// `init-models` devuelve un objeto con todos los modelos
-const models = require("../models/init-models")(require("../config/sequelize"));
+const { muelle } = require("../models");
 
 /**
- * Validador específico para consultas sobre `muelle`.
- *
- * Construye y exporta el esquema Joi para validar query params (limit, offset,
- * order y filtros) basado en la definición del modelo `muelle`.
+ * Esquema de validación para consultas sobre el modelo 'muelle'
+ * 
+ * Basándose en la definición del modelo, permite validar:
+ * - Filtros dinámicos (nombre, tipo, etc.)
+ * - Paginación (limit, offset)
+ * - Ordenamiento
+ * 
+ * @type {Joi.ObjectSchema}
  */
-const muelleQueryValidator = queryValidator(models.muelle);
+const muelleQueryValidator = queryValidator(muelle);
+
 module.exports = muelleQueryValidator;

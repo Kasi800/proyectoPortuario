@@ -1,20 +1,18 @@
-const Joi = require("joi");
-
-/**
- * Esquema Joi para validación de cuerpos `puerto`.
- *
- * - `puertoSchemaFull`: usado para `POST` y `PUT` (todos los campos requeridos).
- * - `puertoSchemaPartial`: usado para `PATCH` (campos opcionales, mínimo 1).
- *
- * Campos principales:
- * - `nombre`, `ciudad`, `pais`: strings entre 2 y 100 caracteres.
- * - `capacidad_teu`: entero >= 0.
- * - `activo`: booleano.
- * - `fecha_inauguracion`: fecha válida.
- * - `profundidad_media`: número >= 0.
+/*
+ * puertoBodyValidator.js - Esquemas de validación para Puertos
+ * Define las reglas de integridad para la creación y edición de puertos
  */
 
-// Validación (POST y PUT) - todos los campos requeridos
+const Joi = require("joi");
+
+// ============================================================
+// ESQUEMAS DE VALIDACIÓN (JOI)
+// ============================================================
+
+/**
+ * Esquema completo para Puerto (POST / PUT)
+ * Valida que todos los campos obligatorios cumplan con los requisitos de negocio
+ */
 const puertoSchemaFull = Joi.object({
     nombre: Joi.string().min(2).max(100).required(),
     ciudad: Joi.string().min(2).max(100).required(),
@@ -23,9 +21,13 @@ const puertoSchemaFull = Joi.object({
     activo: Joi.boolean().required(),
     fecha_inauguracion: Joi.date().required(),
     profundidad_media: Joi.number().min(0).required()
-}).unknown(false);
+}).unknown(false); // No permite campos extra fuera del esquema
 
-// Validación parcial (PATCH) - todas las claves opcionales y al menos una
+/**
+ * Esquema parcial para Puerto (PATCH)
+ * Reutiliza el esquema completo permitiendo actualizaciones parciales
+ * Requiere que se envíe al menos un campo para que la petición sea válida
+ */
 const puertoSchemaPartial = puertoSchemaFull.fork(
     Object.keys(puertoSchemaFull.describe().keys),
     (schema) => schema.optional()

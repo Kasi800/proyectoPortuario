@@ -1,33 +1,40 @@
+/*
+ * queryUtils.js - Utilidades para construcción de queries Sequelize
+ * Procesa parámetros HTTP y construye filtros para la BD
+ */
+
 const { Op } = require("sequelize");
 
+// ============================================================
+// FUNCIONES DE UTILIDAD
+// ============================================================
+
 /**
- * Convierte una cadena de query a su tipo primitivo más apropiado.
- * - "true"  -> true
+ * Convierte una cadena a su tipo primitivo más apropiado
+ * 
+ * Transformaciones:
+ * - "true" -> true
  * - "false" -> false
- * - números  -> Number
- * - cualquier otra cadena -> se devuelve tal cual
- *
- * Esto es útil para transformar parámetros de consulta (query string)
- * previos a construir filtros para la capa de datos.
- *
- * @param {string} value
- * @returns {string|number|boolean}
+ * - Números -> Number
+ * - Otros -> string
+ * 
+ * @param {string} value - Valor a parsear
+ * @returns {string|number|boolean} Valor convertido
  */
 function parseValue(value) {
     if (value === "true") return true;
     if (value === "false") return false;
-    // Detectar números enteros y flotantes (positivos y negativos)
+    // Detectar números (enteros y flotantes, positivos y negativos)
     if (/^-?\d+(?:\.\d+)?$/.test(value)) return Number(value);
     return value;
 }
 
 /**
- * Devuelve la lista de campos permitidos a partir de un modelo Sequelize.
- * Si el `modelo` es inválido o no tiene `rawAttributes`, devuelve un
- * array vacío en lugar de lanzar una excepción.
- *
- * @param {Object} modelo - instancia de modelo Sequelize o undefined
- * @returns {string[]} Array de nombres de atributos del modelo
+ * Obtiene los campos permitidos de un modelo Sequelize
+ * Devuelve array vacío si el modelo es inválido
+ * 
+ * @param {Object} modelo - Modelo Sequelize
+ * @returns {string[]} Array de nombres de campos
  */
 function getAllowedFields(modelo) {
     try {
@@ -38,22 +45,24 @@ function getAllowedFields(modelo) {
 }
 
 /**
- * Construye un objeto de consulta compatible con Sequelize a partir
- * de los parámetros de query HTTP y un modelo Sequelize.
- *
- * Comportamiento principal:
- * - `limit`: por defecto 100; si se proporciona, se parsea y se limita a 1000 como máximo.
- * - `offset`: por defecto 0; si se proporciona, debe ser un entero >= 0.
- * - `order`: debe tener formato "campo:direccion" (ej. "nombre:desc");
- *   solo se aplica si `campo` está en la lista de campos permitidos del modelo.
- * - Para cada parámetro de query que coincida con un campo permitido se añade
- *   una entrada en `where` tras convertir el valor con `parseValue`.
- * - Se ignoran los parámetros especiales `limit`, `offset` y `order` al construir `where`.
- *
- * @param {Object} queryParams - objeto con parámetros de consulta (strings)
- * @param {Object} modelo - modelo Sequelize
- * @returns {{where: Object, limit: number, offset: number, order: Array}}
- *          objeto listo para pasar a métodos de consulta de Sequelize
+ * Construye un objeto de consulta compatible con Sequelize
+ * a partir de parámetros HTTP
+ * 
+ * Parámetros especiales:
+ * - limit: máximo 1000 (por defecto 100)
+ * - offset: entero >= 0 (por defecto 0)
+ * - order: formato "campo:direccion" (ej: "nombre:desc")
+ * - campo_min, campo_max: rango de valores
+ * 
+ * @param {Object} queryParams - Parámetros de consulta HTTP
+ * @param {Object} modelo - Modelo Sequelize
+ * @returns {Object} {where, limit, offset, order}
+ * 
+ * @example
+ * const query = buildSequelizeQuery(
+ *   { puerto_id: 1, nombre: "Muelle A", limit: 50 },
+ *   Puerto
+ * );
  */
 function buildSequelizeQuery(queryParams, modelo) {
     const where = {};
@@ -63,62 +72,66 @@ function buildSequelizeQuery(queryParams, modelo) {
     let limit = 100;
     let offset = 0;
 
-    // Procesar `limit` si está presente (capar a 1000)
+    // Procesar limit (máximo 1000)
     if (queryParams.limit) {
         const l = parseInt(queryParams.limit);
         if (!Number.isNaN(l)) limit = Math.min(l, 1000);
     }
 
-    // Procesar `offset` si está presente (solo enteros no negativos)
+    // Procesar offset (solo enteros >= 0)
     if (queryParams.offset) {
         const o = parseInt(queryParams.offset);
         if (!Number.isNaN(o) && o >= 0) offset = o;
     }
 
-    // Procesar `order` si está presente. Formato esperado: campo:direccion
+    // Procesar order (formato: campo:direccion)
     let order = [];
     if (queryParams.order) {
         const [campo, direccion] = queryParams.order.split(":");
 
-        // Aplicar orden solo si el campo está permitido por el modelo
+        // Validar que el campo exista en el modelo
         if (allowed.includes(campo)) {
             order.push([campo, direccion?.toUpperCase() === "DESC" ? "DESC" : "ASC"]);
         }
     }
 
-    // Procesar rangos (_min, _max)
+    // Procesar filtros de rango (campo_min, campo_max)
     for (const key in queryParams) {
         if (!key.endsWith("_min") && !key.endsWith("_max")) continue;
 
         const baseField = key.replace(/_(min|max)$/, "");
 
-        // Solo procesar si el campo base existe en el modelo
+        // Validar que el campo existe en el modelo
         if (!allowed.includes(baseField)) continue;
 
         const min = queryParams[`${baseField}_min`];
         const max = queryParams[`${baseField}_max`];
 
         if (min !== undefined && max !== undefined) {
+            // Rango entre dos valores
             where[baseField] = {
                 [Op.between]: [parseValue(min), parseValue(max)]
             };
         } else if (min !== undefined) {
+            // Mayor o igual que
             where[baseField] = {
                 [Op.gte]: parseValue(min)
             };
         } else if (max !== undefined) {
+            // Menor o igual que
             where[baseField] = {
                 [Op.lte]: parseValue(max)
             };
         }
     }
 
-    // Construir `where` usando solo campos permitidos y omitiendo parámetros especiales
+    // Procesar filtros regulares (campos permitidos solamente)
     for (const key in queryParams) {
+        // Ignorar parámetros especiales y de rango
         if (["limit", "offset", "order"].includes(key)) continue;
         if (key.endsWith('_min') || key.endsWith('_max')) continue;
 
-        // Convertir el valor de la query a su tipo primitivo más apropiado
+        // Convertir valor y añadir a where si el campo es permitido
         if (allowed.includes(key)) {
             where[key] = parseValue(queryParams[key]);
         }

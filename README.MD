@@ -5,8 +5,8 @@
 * **Frontend Relacionado:** [puerto-api-frontend](https://github.com/Kasi800/proyectoPortuarioFrontend)
 * **Reportar un error:** [Issues](https://github.com/issues)
 
----
 Desarrollado por [Pablo Plazuelo](https://github.com/Kasi800)
+---
 
 Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MySQL**.
 

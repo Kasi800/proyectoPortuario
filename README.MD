@@ -19,7 +19,7 @@ Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MyS
 
 - Node.js 18+
 - MySQL 8+
-- npm o yarn
+- npm
 
 ---
 

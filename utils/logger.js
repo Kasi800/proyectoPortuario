@@ -36,6 +36,22 @@ function logMensaje(...args) {
 }
 
 /**
+ * Registrar un mensaje de error.
+ * @param  {...any} args
+ */
+function logError(...args) {
+  logger.error(...args);
+}
+
+/**
+ * Registrar un mensaje de warn.
+ * @param  {...any} args
+ */
+function logWarn(...args) {
+  logger.warn(...args);
+}
+
+/**
  * Registrar errores SQL de forma estructurada para facilitar el diagnóstico.
  * Extrae campos comunes de errores de MySQL/MariaDB.
  * @param {Error} err
@@ -49,4 +65,4 @@ function logErrorSQL(err) {
   });
 }
 
-module.exports = { logMensaje, logErrorSQL, logger };
+module.exports = { logMensaje, logError, logErrorSQL, logWarn, logger };

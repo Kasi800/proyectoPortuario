@@ -30,7 +30,7 @@ router.put('/:id',
 router.patch('/:id',
     validateId('id'),
     validateBody(puertoSchemaPartial),
-    asyncHandler(puertoController.updatePuerto)
+    asyncHandler(puertoController.patchPuerto)
 );
 router.delete('/:id',
     validateId('id'),

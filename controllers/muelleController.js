@@ -33,6 +33,13 @@ class MuelleController {
         const filas = await muelleService.updateMuelle(id, data);
         return res.json({ ok: true, data: filas, message: "Dock updated correctly" });
     }
+
+    async patchMuelle(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        const filas = await muelleService.updateMuelle(id, data, true);
+        return res.json({ ok: true, data: filas, message: "Dock updated correctly" });
+    }
 }
 
 module.exports = new MuelleController();

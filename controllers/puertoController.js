@@ -33,6 +33,13 @@ class PuertoController {
         const filas = await puertoService.updatePuerto(id, data);
         return res.json({ ok: true, data: filas, message: "Port updated correctly" });
     }
+
+    async patchPuerto(req, res) {
+        const id = req.params.id;
+        const data = req.body;
+        const filas = await puertoService.updatePuerto(id, data, true);
+        return res.json({ ok: true, data: filas, message: "Port updated correctly" });
+    }
 }
 
 module.exports = new PuertoController();

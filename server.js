@@ -4,14 +4,14 @@ const { sequelize } = require("./models");
 // Logger personalizado
 const { logMensaje } = require("./utils/logger.js");
 // Puerto del servidor
-const port = process.env.PORT || 3000;
+const { port } = require("./config/config.js");
 
 // Arranque del servidor y db
 async function startServer() {
     try {
         await sequelize.authenticate();
         logMensaje("Conexión a la base de datos establecida correctamente.");
-        
+
         app.listen(port, () => {
             logMensaje(`Servidor escuchando en el puerto ${port}`);
         });

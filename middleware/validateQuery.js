@@ -1,13 +1,15 @@
+const ApiError = require("../utils/ApiError");
+
 module.exports = (schema) => (req, res, next) => {
-    const { error } = schema.validate(req.query, { abortEarly: false });
+    const { error, value } = schema.validate(req.query, {
+        abortEarly: false,
+        stripUnknown: true
+    });
 
     if (error) {
-        return res.status(400).json({
-            ok: false,
-            data: null,
-            message: "Invalid query"
-        });
+        return next(new ApiError("Invalid query parameters", 400));
     }
 
+    req.query = value;
     next();
 };

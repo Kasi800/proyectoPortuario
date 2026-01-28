@@ -30,7 +30,7 @@ router.put('/:id',
 router.patch('/:id',
     validateId('id'),
     validateBody(muelleSchemaPartial),
-    asyncHandler(muelleController.updateMuelle)
+    asyncHandler(muelleController.patchMuelle)
 );
 router.delete('/:id',
     validateId('id'),

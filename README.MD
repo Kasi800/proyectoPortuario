@@ -1,5 +1,12 @@
 # 🚢 API Portuaria – Puertos y Muelles
-[![GitHub](https://cdn-icons-png.flaticon.com/512/25/25231.png)](https://github.com/Kasi800/proyectoPortuario)
+
+## 🚀 Enlaces Rápidos
+* **Repositorio Principal:** [puerto-api-backend](https://github.com/Kasi800/proyectoPortuario)
+* **Frontend Relacionado:** [puerto-api-frontend](https://github.com/Kasi800/proyectoPortuarioFrontend)
+* **Reportar un error:** [Issues](https://github.com/issues)
+
+---
+Desarrollado por [Pablo Plazuelo](https://github.com/Kasi800)
 
 Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MySQL**.
 

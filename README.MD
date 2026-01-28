@@ -1,5 +1,5 @@
 # 🚢 API Portuaria – Puertos y Muelles
-[![GitHub](https://img.shields.io)](https://github.com/Kasi800/proyectoPortuario)
+[![GitHub](https://cdn-icons-png.flaticon.com/512/25/25231.png)](https://github.com/Kasi800/proyectoPortuario)
 
 Backend RESTful desarrollado con **Node.js**, **Express**, **Sequelize** y **MySQL**.
 

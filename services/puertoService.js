@@ -65,7 +65,7 @@ class PuertoService {
 
             const result = await puerto.findByPk(id);
             if (!result) throw new ApiError('Puerto not found', 404);
-            
+
             return result;
         } catch (err) {
             if (err.status) throw err;
@@ -91,7 +91,7 @@ class PuertoService {
                 stripUnknown: true
             });
             if (error) {
-                throw new ApiError("Invalid puerto data", 400);
+                throw new ApiError("Invalid puerto data", 400, error.details);
             }
 
             const result = await puerto.create(value);
@@ -126,13 +126,13 @@ class PuertoService {
                 stripUnknown: true
             });
             if (error) {
-                throw new ApiError("Invalid puerto data", 400);
+                throw new ApiError("Invalid puerto data", 400, error.details);
             }
 
             // Actualizar en BD
             const [numFilas] = await puerto.update(value, { where: { id_puerto: id } });
             if (numFilas === 0) throw new ApiError('Puerto not found or without changes', 404);
-            
+
             return numFilas;
         } catch (err) {
             if (err.status) throw err;
@@ -154,10 +154,10 @@ class PuertoService {
         try {
             const id = Number(id_puerto);
             idValidator(id);
-            
+
             const numFilas = await puerto.destroy({ where: { id_puerto: id } });
             if (numFilas === 0) throw new ApiError('Puerto not found', 404);
-            
+
             return numFilas;
         } catch (err) {
             if (err.status) throw err;

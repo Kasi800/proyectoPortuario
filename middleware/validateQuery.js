@@ -32,7 +32,7 @@ module.exports = (schema) => (req, res, next) => {
 
     if (error) {
         // Interrumpe la petición con un error 400 si la validación falla
-        return next(new ApiError("Invalid query parameters", 400));
+        return next(new ApiError("Invalid query parameters", 400, error.details));
     }
 
     // Actualiza req.query con los datos limpios y tipados

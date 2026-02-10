@@ -30,7 +30,9 @@ const { logError, logErrorSQL, logWarn } = require('../utils/logger.js');
 module.exports = (err, req, res, next) => {
   // Extraer estado y mensaje del error (valores por defecto)
   const status = err.status || 500;
-  const message = err.message || 'Error interno del servidor';
+  const message = err.details
+    ? err.message + ": " + err.details.map(d => d.message).join("; ")
+    : err.message || 'Error interno del servidor';
 
   // Construir metadatos del error para logging
   const meta = {
@@ -53,9 +55,9 @@ module.exports = (err, req, res, next) => {
   }
 
   // Enviar respuesta JSON al cliente
-  res.status(status).json({ 
-    ok: false, 
-    data: null, 
-    message: message 
+  res.status(status).json({
+    ok: false,
+    data: null,
+    message: message
   });
 };

@@ -19,7 +19,8 @@ require("dotenv").config({
 module.exports = {
   // Puerto del servidor (por defecto 3000)
   port: process.env.PORT || 3000,
-  
+  node_env: process.env.NODE_ENV || "development",
+
   // Configuración de la base de datos
   db: {
     host: process.env.DB_HOST || "localhost",

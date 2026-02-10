@@ -31,7 +31,7 @@ module.exports = (schema) => (req, res, next) => {
     });
     if (error) {
         // Lanza error 400 si la validación falla
-        return next(new ApiError("Invalid request data", 400));
+        return next(new ApiError("Invalid request data", 400, error.details));
     }
 
     // Sobrescribir req.body con los datos validados y limpios

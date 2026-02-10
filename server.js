@@ -18,12 +18,23 @@ async function startServer() {
         logMensaje("Conexión a la base de datos establecida correctamente.");
 
         // Iniciar servidor Express
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             logMensaje(`Servidor escuchando en el puerto ${port}`);
+        });
+
+        process.on('SIGTERM', () => {
+            logMensaje('Recibida señal SIGTERM, cerrando servidor...');
+            server.close(async () => {
+                await sequelize.close();
+                process.exit(0);
+            });
         });
     } catch (error) {
         // Registrar errores de conexión
         console.error("Error de conexión con la base de datos:", error);
+
+        console.log('Reintentando conexion en 10 segundos...');
+        setTimeout(startServer, 10000);
     }
 }
 

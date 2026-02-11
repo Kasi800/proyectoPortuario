@@ -20,7 +20,7 @@ const puertoSchemaFull = Joi.object({
     capacidad_teu: Joi.number().integer().min(0).required(),
     activo: Joi.boolean().required(),
     fecha_inauguracion: Joi.date().required(),
-    profundidad_media: Joi.number().min(0).required()
+    profundidad_media: Joi.number().min(0).max(999.99).required()
 }).unknown(false); // No permite campos extra fuera del esquema
 
 /**
